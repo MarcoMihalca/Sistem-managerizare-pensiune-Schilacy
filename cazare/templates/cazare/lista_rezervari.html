@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Rezervări</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .activa { background-color: #d4edda; }
+        .finalizata { background-color: #e2e3e5; }
+        .anulata { background-color: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>Panou Control Rezervări</h1>
+    <a href="{% url 'creare_rezervare' %}"> + Adaugă Rezervare Nouă</a>
+    <a href="{% url 'acasa' %}"> Înapoi Acasă</a>
+    <hr>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Camere</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Status</th>
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rez in rezervari %}
+            <tr class="{{ rez.status }}">
+                <td>#{{ rez.id }}</td>
+                <td>{{ rez.client }}</td>
+                <td>
+                    {% for cam in rez.camere.all %}
+                        {{ cam.numar_camera }} 
+                    {% endfor %}
+                </td>
+                <td>{{ rez.data_check_in }}</td>
+                <td>{{ rez.data_check_out }}</td>
+                <td><strong>{{ rez.status|upper }}</strong></td>
+                
+                <td>
+                    {% if rez.status == 'activa' %}
+                        <a href="{% url 'anuleaza_rezervare' rez.id %}" 
+                           onclick="return confirm('Sigur anulezi aceasta rezervare?');" 
+                           style="color: red; font-weight: bold;">
+                            Anulează
+                        </a>
+                        | 
+                        <a href="#">Check-Out</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">Nu există rezervări înregistrate.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
