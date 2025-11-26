@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect,get_object_or_404 # <-- Am adaugat
 from .models import TipCamera,Rezervare,Camera,Factura
 from .forms import RezervareForm # <-- Am importat formularul creat la pasul 1
 from django.utils import timezone
+from django.db.models import Sum, Count
 
 def homepage(request):
     toate_tipurile = TipCamera.objects.all()
@@ -84,3 +85,30 @@ def efectueaza_check_out(request, rezervare_id):
 def vizualizare_factura(request, factura_id):
     factura = get_object_or_404(Factura, id=factura_id)
     return render(request, 'cazare/factura.html', {'factura': factura})
+
+def rapoarte_manager(request):
+    # 1. Calculam Veniturile Totale (Suma tuturor facturilor emise)
+    # Folosim functia 'aggregate' care returneaza un dictionar
+    situatie_financiara = Factura.objects.aggregate(total_incasari=Sum('total_plata'))
+    
+    # Daca nu exista nicio factura, rezultatul e None, asa ca punem 0
+    venit_total = situatie_financiara['total_incasari'] or 0
+
+    # 2. Numarul total de rezervari
+    total_rezervari = Rezervare.objects.count()
+
+    # 3. Numarul de rezervari finalizate vs anulate (Statistica)
+    rezervari_finalizate = Rezervare.objects.filter(status='finalizata').count()
+    rezervari_anulate = Rezervare.objects.filter(status='anulata').count()
+
+    # 4. (Optional) Cea mai populara camera (Query complex)
+    # Numaram de cate ori apare fiecare camera in rezervari
+    
+    context = {
+        'venit_total': venit_total,
+        'total_rezervari': total_rezervari,
+        'rezervari_finalizate': rezervari_finalizate,
+        'rezervari_anulate': rezervari_anulate,
+    }
+    
+    return render(request, 'cazare/rapoarte.html', context)

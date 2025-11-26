@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapoarte Manageriale</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .dashboard { display: flex; gap: 20px; flex-wrap: wrap; }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 200px;
+            text-align: center;
+        }
+        .card h3 { margin: 0; color: #555; font-size: 16px; }
+        .card p { font-size: 32px; font-weight: bold; color: #2c3e50; margin: 10px 0; }
+        .money { color: green !important; }
+        .danger { color: red !important; }
+    </style>
+</head>
+<body>
+
+    <h1>📊 Rapoarte Manageriale</h1>
+    <a href="{% url 'acasa' %}">« Înapoi la Acasă</a>
+    <hr>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Venituri Totale</h3>
+            <p class="money">{{ venit_total }} RON</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Rezervări</h3>
+            <p>{{ total_rezervari }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Sejururi Încheiate</h3>
+            <p>{{ rezervari_finalizate }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Anulări</h3>
+            <p class="danger">{{ rezervari_anulate }}</p>
+        </div>
+    </div>
+
+    <br><br>
+    <h3>Interpretare:</h3>
+    <ul>
+        <li>Dacă rata de anulare ({{ rezervari_anulate }} din {{ total_rezervari }}) este mare, verificați prețurile.</li>
+        <li>Veniturile sunt calculate strict pe baza facturilor emise la Check-Out.</li>
+    </ul>
+
+</body>
+</html>
