@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Rezervare Nouă</title>
+</head>
+<body>
+    <h1>Adaugă o Rezervare Nouă</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <button type="submit">Salvează Rezervarea</button>
+    </form>
+    
+    <br>
+    <a href="{% url 'acasa' %}">Înapoi la prima pagină</a>
+</body>
+</html>
