@@ -7,4 +7,6 @@ urlpatterns = [
     path('rezervare-noua/', views.creare_rezervare, name='creare_rezervare'),
     path('rezervari/', views.lista_rezervari, name='lista_rezervari'),
     path('rezervare/anulare/<int:rezervare_id>/', views.anuleaza_rezervare, name='anuleaza_rezervare'),
+    # ... celelalte rute ...
+    path('rezervare/checkout/<int:rezervare_id>/', views.efectueaza_check_out, name='efectueaza_check_out'),
 ]

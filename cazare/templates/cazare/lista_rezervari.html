@@ -52,7 +52,11 @@
                             Anulează
                         </a>
                         | 
-                        <a href="#">Check-Out</a>
+                        <a href="{% url 'efectueaza_check_out' rez.id %}" 
+   onclick="return confirm('Confirmi check-out-ul? Se va genera factura.');"
+   style="color: blue; font-weight: bold;">
+   Check-Out
+</a>
                     {% else %}
                         -
                     {% endif %}
