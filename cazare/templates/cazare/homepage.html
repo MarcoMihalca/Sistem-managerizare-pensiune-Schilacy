@@ -6,9 +6,26 @@
 </head>
 <body>
     <h1>Bine ați venit la Pensiunea Schilacy!</h1>
-    <p>Sistem de gestiune hotelieră.</p>
+    <p>Sistem de gestiune hotelieră - Versiune Backend</p>
     <hr>
-    <h3>Camere disponibile:</h3>
-    <p>Momentan nu sunt date încărcate.</p>
+    
+    <h3>Oferta noastră de cazare:</h3>
+
+    <ul>
+        {% for camera in tipuri %}
+            <li>
+                <strong>{{ camera.nume_tip }}</strong> 
+                - Preț: {{ camera.pret_per_noapte }} RON
+                <br>
+                <small>Descriere: {{ camera.descriere }}</small>
+                <br>
+                <small>Facilități: {{ camera.facilitati }}</small>
+                <hr>
+            </li>
+        {% empty %}
+            <p>Nu există oferte disponibile momentan.</p>
+        {% endfor %}
+    </ul>
+
 </body>
 </html>
