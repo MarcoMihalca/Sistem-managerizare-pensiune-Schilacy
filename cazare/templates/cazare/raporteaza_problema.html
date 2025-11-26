@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Raportează Problemă</title>
+</head>
+<body>
+    <h1>⚠️ Raportează o defecțiune</h1>
+    <p>Descrieți problema tehnică pentru a notifica managerul.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="background-color: red; color: white; padding: 10px;">Trimite Sesizarea</button>
+    </form>
+    
+    <br>
+    <a href="{% url 'acasa' %}">Anulează</a>
+</body>
+</html>

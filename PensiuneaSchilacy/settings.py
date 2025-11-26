@@ -123,3 +123,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'cazare.Utilizator'
+
+# Setari pentru Login/Logout
+LOGIN_REDIRECT_URL = 'acasa'   # Numele rutei pentru homepage
+LOGOUT_REDIRECT_URL = 'login'  # Numele rutei pentru login
+LOGIN_URL = 'login'            # Unde te trimite daca incerci sa intri undeva fara voie

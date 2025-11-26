@@ -5,18 +5,35 @@
     <title>Pensiunea Schilacy</title>
 </head>
 <body>
+
+<div style="background: #333; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+    <span>👤 Logat ca: <strong>{{ user.username }}</strong> ({{ user.rol|upper }})</span>
+    
+    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="background: red; border: none; color: white; cursor: pointer; padding: 5px 10px;">Ieșire Cont</button>
+    </form>
+</div>
+
     <h1>Bine ați venit la Pensiunea Schilacy!</h1>
+    
     <a href="{% url 'creare_rezervare' %}">
-    <button style="padding: 10px; background-color: green; color: white;">
-        + Adaugă Rezervare
-    </button>
-</a>
-<hr>
+        <button style="padding: 10px; background-color: green; color: white; font-weight: bold;">
+            + Adaugă Rezervare
+        </button>
+    </a>
+    
+    <a href="{% url 'lista_rezervari' %}">
+        <button style="padding: 10px; background-color: #007bff; color: white;">
+            📋 Vezi Tabel Rezervări
+        </button>
+    </a>
+
+    <hr>
     <p>Sistem de gestiune hotelieră - Versiune Backend</p>
     <hr>
     
     <h3>Oferta noastră de cazare:</h3>
-
     <ul>
         {% for camera in tipuri %}
             <li>
@@ -33,11 +50,32 @@
         {% endfor %}
     </ul>
 
-    <a href="{% url 'rapoarte_manager' %}">
-    <button style="padding: 10px; background-color: #333; color: white;">
-        📊 Rapoarte Manager
-    </button>
-</a>
+    <hr>
+    
+    <h3>Mentenanță & Suport:</h3>
+    <a href="{% url 'raporteaza_problema' %}">
+        <button style="color: red; padding: 10px;">⚠️ Raportează o Problemă</button>
+    </a>
+
+    {% if user.rol == 'manager' or user.is_superuser %}
+        <br><br>
+        <div style="border: 2px solid #333; background-color: #f4f4f4; padding: 15px;">
+            <h3 style="margin-top: 0;">🛡️ Panou Manager</h3>
+            <p>Opțiuni administrative:</p>
+
+            <a href="{% url 'rapoarte_manager' %}">
+                <button style="padding: 10px; background-color: #333; color: white;">
+                    📊 Rapoarte Financiare
+                </button>
+            </a>
+            
+            <a href="{% url 'lista_probleme' %}">
+                <button style="padding: 10px; background-color: #555; color: white;">
+                    🛠️ Vezi Tichete Tehnice
+                </button>
+            </a>
+        </div>
+    {% endif %}
 
 </body>
 </html>

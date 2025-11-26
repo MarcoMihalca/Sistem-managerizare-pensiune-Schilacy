@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Autentificare - Pensiunea Schilacy</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f2f5; }
+        .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>🔐 Login</h2>
+        <p>Pensiunea Schilacy</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <p style="color: red; font-size: 12px;">Utilizator sau parolă incorectă!</p>
+            {% endif %}
+
+            <p>Utilizator:</p>
+            {{ form.username }}
+            
+            <p>Parolă:</p>
+            {{ form.password }}
+
+            <button type="submit">Autentificare</button>
+        </form>
+    </div>
+
+</body>
+</html>

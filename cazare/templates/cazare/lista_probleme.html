@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Management Probleme</title>
+    <style>
+        .tichet { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-left: 5px solid red; }
+        .tichet-rezolvat { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-left: 5px solid green; background: #f9f9f9; color: gray; }
+        button { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🛠️ Panou Probleme Tehnice</h1>
+    <a href="{% url 'acasa' %}">« Înapoi Acasă</a>
+    <hr>
+
+    <h2>Probleme Active ({{ active.count }})</h2>
+    {% for prob in active %}
+        <div class="tichet">
+            <h3>{{ prob.titlu }}</h3>
+            <p>{{ prob.descriere }}</p>
+            <small>Raportat de: {{ prob.raportata_de }} la {{ prob.data_raportare }}</small>
+            <br><br>
+            <a href="{% url 'rezolva_problema' prob.id %}">
+                <button>✅ Marchează ca Rezolvat</button>
+            </a>
+        </div>
+    {% empty %}
+        <p>✅ Totul funcționează perfect! Nicio sesizare activă.</p>
+    {% endfor %}
+
+    <hr>
+    <h3>Istoric (Rezolvate)</h3>
+    {% for prob in vechi %}
+        <div class="tichet-rezolvat">
+            <strong>[REZOLVAT] {{ prob.titlu }}</strong> - {{ prob.data_raportare|date:"d M Y" }}
+        </div>
+    {% endfor %}
+
+</body>
+</html>

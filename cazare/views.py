@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect,get_object_or_404 # <-- Am adaugat redirect
-from .models import TipCamera,Rezervare,Camera,Factura
-from .forms import RezervareForm # <-- Am importat formularul creat la pasul 1
+from .models import TipCamera,Rezervare,Camera,Factura,Utilizator,Problema
+from .forms import RezervareForm , ProblemaForm # <-- Am importat formularul creat la pasul 1
 from django.utils import timezone
 from django.db.models import Sum, Count
+from django.contrib.auth.decorators import login_required # <-- Adauga asta sus de tot
 
+@login_required
 def homepage(request):
     toate_tipurile = TipCamera.objects.all()
     context = {'tipuri': toate_tipurile}
     return render(request, 'cazare/homepage.html', context)
 
 # --- Functia Noua ---
+@login_required
 def creare_rezervare(request):
     if request.method == 'POST':
         # Daca userul a apasat butonul "Salveaza"
@@ -23,6 +26,7 @@ def creare_rezervare(request):
 
     return render(request, 'cazare/creare_rezervare.html', {'form': form})
 
+@login_required
 def lista_rezervari(request):
     # Luam toate rezervarile, ordonate dupa data (cele mai recente primele)
     rezervari = Rezervare.objects.all().order_by('-data_check_in')
@@ -32,6 +36,7 @@ def lista_rezervari(request):
     }
     return render(request, 'cazare/lista_rezervari.html', context)
 
+@login_required
 def anuleaza_rezervare(request, rezervare_id):
     # 1. Cautam rezervarea dupa ID
     rezervare = get_object_or_404(Rezervare, id=rezervare_id)
@@ -43,6 +48,7 @@ def anuleaza_rezervare(request, rezervare_id):
     # 3. Ne intoarcem la lista
     return redirect('lista_rezervari')
 
+@login_required
 def efectueaza_check_out(request, rezervare_id):
     # 1. Luam rezervarea
     rezervare = get_object_or_404(Rezervare, id=rezervare_id)
@@ -82,13 +88,17 @@ def efectueaza_check_out(request, rezervare_id):
     
     return redirect('lista_rezervari')
 
+@login_required
 def vizualizare_factura(request, factura_id):
     factura = get_object_or_404(Factura, id=factura_id)
     return render(request, 'cazare/factura.html', {'factura': factura})
 
+@login_required
 def rapoarte_manager(request):
     # 1. Calculam Veniturile Totale (Suma tuturor facturilor emise)
     # Folosim functia 'aggregate' care returneaza un dictionar
+    if not request.user.este_manager():
+         return redirect('acasa')
     situatie_financiara = Factura.objects.aggregate(total_incasari=Sum('total_plata'))
     
     # Daca nu exista nicio factura, rezultatul e None, asa ca punem 0
@@ -112,3 +122,44 @@ def rapoarte_manager(request):
     }
     
     return render(request, 'cazare/rapoarte.html', context)
+
+from .models import Utilizator, Problema # Asigura-te ca sunt importate
+from .forms import RezervareForm, ProblemaForm # Importa si noul formular
+
+# --- SECTIUNEA TICKETING ---
+
+@login_required
+def raporteaza_problema(request):
+    if request.method == 'POST':
+        form = ProblemaForm(request.POST)
+        if form.is_valid():
+            problema = form.save(commit=False)
+            # TRUC TEMPORAR: Pentru ca nu avem Login, atribuim problema primului user din baza de date (Adminul)
+            # Cand vom baga login, vom schimba cu: problema.raportata_de = request.user
+            problema.raportata_de = Utilizator.objects.first() 
+            problema.save()
+            return redirect('acasa') # Dupa ce raporteaza, il trimitem acasa
+    else:
+        form = ProblemaForm()
+    
+    return render(request, 'cazare/raporteaza_problema.html', {'form': form})
+
+@login_required
+def lista_probleme(request):
+    # Luam doar problemele nerezolvate (active)
+    probleme_active = Problema.objects.filter(rezolvata=False).order_by('-data_raportare')
+    # Luam si istoricul celor rezolvate (optional)
+    probleme_vechi = Problema.objects.filter(rezolvata=True).order_by('-data_raportare')
+    
+    context = {
+        'active': probleme_active,
+        'vechi': probleme_vechi
+    }
+    return render(request, 'cazare/lista_probleme.html', context)
+
+@login_required
+def rezolva_problema(request, problema_id):
+    problema = get_object_or_404(Problema, id=problema_id)
+    problema.rezolvata = True
+    problema.save()
+    return redirect('lista_probleme')
