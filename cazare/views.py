@@ -80,3 +80,7 @@ def efectueaza_check_out(request, rezervare_id):
     rezervare.save()
     
     return redirect('lista_rezervari')
+
+def vizualizare_factura(request, factura_id):
+    factura = get_object_or_404(Factura, id=factura_id)
+    return render(request, 'cazare/factura.html', {'factura': factura})

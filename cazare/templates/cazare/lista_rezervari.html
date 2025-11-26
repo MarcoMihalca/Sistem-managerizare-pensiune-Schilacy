@@ -7,9 +7,9 @@
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        .activa { background-color: #d4edda; }
-        .finalizata { background-color: #e2e3e5; }
-        .anulata { background-color: #f8d7da; }
+        .activa { background-color: #d4edda; } /* Verde */
+        .finalizata { background-color: #e2e3e5; } /* Gri */
+        .anulata { background-color: #f8d7da; } /* Rosu */
     </style>
 </head>
 <body>
@@ -53,15 +53,23 @@
                         </a>
                         | 
                         <a href="{% url 'efectueaza_check_out' rez.id %}" 
-   onclick="return confirm('Confirmi check-out-ul? Se va genera factura.');"
-   style="color: blue; font-weight: bold;">
-   Check-Out
-</a>
+                           onclick="return confirm('Confirmi check-out-ul? Se va genera factura.');"
+                           style="color: blue; font-weight: bold;">
+                           Check-Out
+                        </a>
+
                     {% else %}
-                        -
+                        {% if rez.status == 'finalizata' %}
+                             <a href="{% url 'vizualizare_factura' rez.factura.id %}" target="_blank">
+                                📄 Vezi Factura
+                             </a>
+                        {% else %}
+                             -
+                        {% endif %}
+
                     {% endif %}
                 </td>
-                </tr>
+            </tr>
             {% empty %}
             <tr>
                 <td colspan="7">Nu există rezervări înregistrate.</td>

@@ -9,4 +9,5 @@ urlpatterns = [
     path('rezervare/anulare/<int:rezervare_id>/', views.anuleaza_rezervare, name='anuleaza_rezervare'),
     # ... celelalte rute ...
     path('rezervare/checkout/<int:rezervare_id>/', views.efectueaza_check_out, name='efectueaza_check_out'),
+    path('factura/<int:factura_id>/', views.vizualizare_factura, name='vizualizare_factura'),
 ]

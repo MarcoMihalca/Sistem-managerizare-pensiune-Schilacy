@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura {{ factura.numar_factura }}</title>
+    <style>
+        body { font-family: Courier, monospace; padding: 40px; max-width: 800px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid black; padding-bottom: 20px; }
+        .detalii { margin-top: 30px; }
+        .total { margin-top: 50px; text-align: right; font-size: 24px; font-weight: bold; }
+        .stampila { margin-top: 100px; text-align: center; color: gray; }
+        button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
+        @media print { button { display: none; } } /* Ascunde butonul la printare */
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PENSIUNEA SCHILACY</h1>
+        <p>Factura Fiscală</p>
+        <h3>Nr: {{ factura.numar_factura }}</h3>
+        <p>Data: {{ factura.data_emitere|date:"d M Y" }}</p>
+    </div>
+
+    <div class="detalii">
+        <p><strong>Client:</strong> {{ factura.rezervare.client.nume }} {{ factura.rezervare.client.prenume }}</p>
+        <p><strong>Perioada:</strong> {{ factura.rezervare.data_check_in }} — {{ factura.rezervare.data_check_out }}</p>
+        
+        <table style="width: 100%; margin-top: 20px; border-top: 1px solid black;">
+            <tr>
+                <td style="padding: 10px 0;">Servicii Cazare</td>
+                <td style="text-align: right;">{{ factura.total_plata }} RON</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="total">
+        TOTAL DE PLATĂ: {{ factura.total_plata }} RON
+    </div>
+
+    <div class="stampila">
+        (Semnătura și ștampila)
+        <br>
+        Generat automat de sistem
+    </div>
+
+    <button onclick="window.print()">🖨️ Printează Factura</button>
+    <br><br>
+    <a href="{% url 'lista_rezervari' %}">« Înapoi la Rezervări</a>
+
+</body>
+</html>
