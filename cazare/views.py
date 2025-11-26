@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+# Aceasta este functia pentru pagina principala
+def homepage(request):
+    return render(request, 'cazare/homepage.html')
