@@ -5,8 +5,35 @@ from django.utils import timezone
 from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required # <-- Adauga asta sus de tot
 
+"""
+Modulul Views (Logica de Business).
+
+Acest modul gestionează cererile HTTP primite de la utilizator, procesează datele
+și returnează răspunsurile corespunzătoare (pagini HTML).
+
+Responsabilități principale:
+- Gestionarea fluxului de rezervări (creare, listare, anulare).
+- Implementarea logicii de Check-Out (calcul costuri, emitere facturi).
+- Securizarea accesului (decoratorul @login_required).
+- Generarea rapoartelor manageriale (statistici).
+- Sistemul de ticketing pentru probleme tehnice.
+"""
+
 @login_required
 def homepage(request):
+    """
+    Afișează pagina principală (Dashboard-ul aplicației).
+
+    Interoghează baza de date pentru a prelua tipurile de camere disponibile
+    și le trimite către șablonul HTML pentru a fi afișate în oferta publică.
+    Accesul este permis doar utilizatorilor autentificați.
+
+    Args:
+        request (HttpRequest): Obiectul cererii HTTP.
+
+    Returns:
+        HttpResponse: Pagina 'homepage.html' randată cu contextul datelor.
+    """
     toate_tipurile = TipCamera.objects.all()
     context = {'tipuri': toate_tipurile}
     return render(request, 'cazare/homepage.html', context)
@@ -14,6 +41,22 @@ def homepage(request):
 # --- Functia Noua ---
 @login_required
 def creare_rezervare(request):
+    """
+    Gestionează procesul de creare a unei noi rezervări.
+
+    Dacă cererea este POST (formular trimis):
+        - Validează datele folosind RezervareForm.
+        - Salvează rezervarea în baza de date.
+        - Redirecționează utilizatorul către prima pagină.
+    Dacă cererea este GET (accesare pagină):
+        - Afișează un formular gol.
+
+    Args:
+        request (HttpRequest): Obiectul cererii HTTP.
+
+    Returns:
+        HttpResponse: Pagina cu formularul sau redirect după succes.
+    """
     if request.method == 'POST':
         # Daca userul a apasat butonul "Salveaza"
         form = RezervareForm(request.POST)
@@ -28,6 +71,15 @@ def creare_rezervare(request):
 
 @login_required
 def lista_rezervari(request):
+    """
+    Afișează registrul tuturor rezervărilor din sistem.
+
+    Datele sunt sortate descrescător după data de check-in (cele mai noi primele)
+    pentru a oferi recepționerului o vedere rapidă asupra sosirilor recente.
+
+    Context Template:
+        rezervari: QuerySet cu toate obiectele Rezervare.
+    """
     # Luam toate rezervarile, ordonate dupa data (cele mai recente primele)
     rezervari = Rezervare.objects.all().order_by('-data_check_in')
     
@@ -38,6 +90,15 @@ def lista_rezervari(request):
 
 @login_required
 def anuleaza_rezervare(request, rezervare_id):
+    """
+    Marchează o rezervare ca fiind anulată.
+
+    Nu șterge rezervarea din baza de date, ci doar îi schimbă
+    statusul în 'anulata' pentru a păstra istoricul.
+
+    Args:
+        rezervare_id (int): ID-ul rezervării țintă.
+    """
     # 1. Cautam rezervarea dupa ID
     rezervare = get_object_or_404(Rezervare, id=rezervare_id)
     
@@ -50,6 +111,21 @@ def anuleaza_rezervare(request, rezervare_id):
 
 @login_required
 def efectueaza_check_out(request, rezervare_id):
+    """
+    Execută logica de finalizare a unei rezervari (Check-Out).
+
+    Pași procesați automat:
+    1. Calculează durata șederii (CheckOut - CheckIn).
+            - Dacă durata este 0 zile, se taxează minim o noapte.
+    2. Iterează prin toate camerele rezervării pentru a calcula prețul total
+       (Preț cameră * Nr. nopti).
+    3. Eliberează camerele (le schimbă starea din 'ocupata' în 'libera').
+    4. Generează automat o Factură Fiscală unică asociată rezervării.
+    5. Actualizează statusul rezervării în 'finalizata'.
+
+    Args:
+        rezervare_id (int): ID-ul rezervării care se finalizează.
+    """
     # 1. Luam rezervarea
     rezervare = get_object_or_404(Rezervare, id=rezervare_id)
     
@@ -90,11 +166,29 @@ def efectueaza_check_out(request, rezervare_id):
 
 @login_required
 def vizualizare_factura(request, factura_id):
+    """
+    Afișează detaliile unei facturi emise.
+
+    Pagina HTML rezultată este optimizată pentru tipărire,
+    ascunzând elementele de navigare pe foaia fizică.
+    """
     factura = get_object_or_404(Factura, id=factura_id)
     return render(request, 'cazare/factura.html', {'factura': factura})
 
 @login_required
 def rapoarte_manager(request):
+    """
+    Generează dashboard-ul statistic pentru manageri.
+
+    Conecteaza si culege datele în timp real folosind funcții SQL (SUM, COUNT)
+    prin intermediul Django ORM:
+    - Venituri Totale: Suma tuturor facturilor emise.
+    - Statistici Operaționale: Numărul total de rezervări, anulări și finalizări.
+
+    Securitate:
+        Verifică explicit dacă utilizatorul are rolul de 'manager'.
+        În caz contrar, redirecționează către pagina principală.
+    """
     # 1. Calculam Veniturile Totale (Suma tuturor facturilor emise)
     # Folosim functia 'aggregate' care returneaza un dictionar
     if not request.user.este_manager():
@@ -130,6 +224,13 @@ from .forms import RezervareForm, ProblemaForm # Importa si noul formular
 
 @login_required
 def raporteaza_problema(request):
+    """
+    Gestionează formularul de raportare a defecțiunilor tehnice.
+
+    La salvarea form-ului, atașează automat problema utilizatorului curent
+    (sau primului utilizator din bază, în versiunea curentă de test)
+    pentru a asigura trasabilitatea sesizării.
+    """
     if request.method == 'POST':
         form = ProblemaForm(request.POST)
         if form.is_valid():
@@ -146,6 +247,13 @@ def raporteaza_problema(request):
 
 @login_required
 def lista_probleme(request):
+    """
+    Afișează tabloul de bord pentru mentenanță.
+
+    Separă problemele în două liste distincte:
+    1. Active: Probleme nerezolvate, care necesită atenție imediată.
+    2. Istoric: Probleme marcate deja ca rezolvate.
+    """
     # Luam doar problemele nerezolvate (active)
     probleme_active = Problema.objects.filter(rezolvata=False).order_by('-data_raportare')
     # Luam si istoricul celor rezolvate (optional)
@@ -159,6 +267,15 @@ def lista_probleme(request):
 
 @login_required
 def rezolva_problema(request, problema_id):
+    """
+    Închide un tichet de suport tehnic.
+
+    Setează flag-ul 'rezolvata' pe True, mutând problema din lista activă
+    în istoric.
+
+    Args:
+        problema_id (int): ID-ul problemei rezolvate.
+    """
     problema = get_object_or_404(Problema, id=problema_id)
     problema.rezolvata = True
     problema.save()
