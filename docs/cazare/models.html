@@ -414,93 +414,184 @@
 
                         <label class="view-source-button" for="mod-models-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractUser</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="c1"># 1. UTILIZATOR (Manager &amp; Receptioner)</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Utilizator</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="n">ROLE_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>        <span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="s1">&#39;Manager&#39;</span><span class="p">),</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="p">(</span><span class="s1">&#39;receptioner&#39;</span><span class="p">,</span> <span class="s1">&#39;Recepționer&#39;</span><span class="p">),</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="p">)</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    <span class="n">rol</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ROLE_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;receptioner&#39;</span><span class="p">)</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="c1"># 2. CLIENT</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">nume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">prenume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">telefon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prenume</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="c1"># 3. TIP CAMERA</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TipCamera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="n">nume_tip</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="n">facilitati</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="n">pret_per_noapte</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume_tip</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pret_per_noapte</span><span class="si">}</span><span class="s2"> RON&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="c1"># 4. CAMERA</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="p">(</span><span class="s1">&#39;libera&#39;</span><span class="p">,</span> <span class="s1">&#39;Liberă&#39;</span><span class="p">),</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="p">(</span><span class="s1">&#39;ocupata&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocupată&#39;</span><span class="p">),</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="p">(</span><span class="s1">&#39;curatenie&#39;</span><span class="p">,</span> <span class="s1">&#39;Curățenie&#39;</span><span class="p">),</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>    <span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="n">numar_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>    <span class="n">etaj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>    <span class="n">stare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span><span class="p">)</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="n">tip_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">TipCamera</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Camera </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_camera</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stare</span><span class="si">}</span><span class="s2">)&quot;</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="c1"># 5. REZERVARE</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Rezervare</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>    <span class="n">camere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Camera</span><span class="p">)</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>    
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>    <span class="n">data_check_in</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>    <span class="n">data_check_out</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span><span class="p">)</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>    
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Rezervare </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="c1"># 6. FACTURA</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Factura</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>    <span class="n">rezervare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">Rezervare</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="n">numar_factura</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>    <span class="n">data_emitere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="n">total_plata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="n">este_platita</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Factura </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_factura</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="c1"># 7. PROBLEMĂ (TICKET)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Problema</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>    <span class="n">titlu</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="n">data_raportare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>    <span class="n">rezolvata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>    <span class="n">raportata_de</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Utilizator</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">titlu</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractUser</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="sd">Modulul Models pentru Aplicația de Gestiune Hotelieră.</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="sd">Acest modul definește structura bazei de date (ORM) pentru Pensiunea Schilacy.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="sd">Include definițiile pentru utilizatori cum ar fi personalul pensiunii, clienți, camere, rezervări</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">și sistemul de facturare.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">Modele incluse:</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="sd">    - Utilizator: Extinde userul standard Django cu roluri specifice.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="sd">    - Client: Datele de contact ale persoanelor care efectueaza cazarile.</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">    - Camera &amp; TipCamera: Gestiunea camerelor și tipurilor de camere.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">    - Rezervare: Check-in si Check-out.</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">    - Factura: Document emis automat.</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="sd">    - Problema: Sistem de ticketing pentru eventualele probleme ale pensiunii.</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="c1"># 1. UTILIZATOR (Manager &amp; Receptioner)</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Utilizator</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="sd">    Model pentru utilizatorii sistemului (personalul pensiunii).</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">    </span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">    Extinde clasa AbstractUser din Django pentru a adăuga roluri specifice</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">    de acces.</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        rol (str): Rolul utilizatorului în sistem. </span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">                   Poate fi &#39;manager&#39; (acces total) sau &#39;receptioner&#39; (acces operațional).</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>    <span class="n">ROLE_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>        <span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="s1">&#39;Manager&#39;</span><span class="p">),</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>        <span class="p">(</span><span class="s1">&#39;receptioner&#39;</span><span class="p">,</span> <span class="s1">&#39;Recepționer&#39;</span><span class="p">),</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>    <span class="p">)</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>    <span class="n">rol</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ROLE_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;receptioner&#39;</span><span class="p">)</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>    
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>        
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="c1"># 2. CLIENT</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">    Stocheaza datele de identificare și contact ale oaspeților.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">    </span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">    Acest model este folosit pentru a ține istoricul clienților și pentru</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">    a completa automat datele pe factură.</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">        nume (str): Numele de familie.</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        prenume (str): Prenumele clientului.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">        email (str): Adresa de email (trebuie să fie unica).</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">        telefon (str): Numărul de telefon pentru contact rapid.</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>    <span class="n">nume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>    <span class="n">prenume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="n">telefon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>    
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prenume</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="c1"># 3. TIP CAMERA</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TipCamera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">    Lista pentru tipurile de camere disponibile și prețurile lor.</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">    </span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">    Permite modificarea centralizată a prețurilor. Dacă prețul pentru </span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">    &#39;Camera Dublă&#39; se schimbă aici, se va reflecta la toate camerele de acest tip.</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        nume_tip (str): Denumirea comercială (ex: &#39;Single&#39;, &#39;Matrimonială Deluxe&#39;).</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">        descriere (str): Detalii despre dotări și spațiu.</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        facilitati (str): Listă de facilități (ex: &#39;TV, AC, Balcon&#39;).</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        pret_per_noapte (Decimal): Tariful standard per noapte în RON.</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>    <span class="n">nume_tip</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="n">facilitati</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>    <span class="n">pret_per_noapte</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume_tip</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pret_per_noapte</span><span class="si">}</span><span class="s2"> RON&quot;</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="c1"># 4. CAMERA</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">    Reprezintă o cameră fizică din pensiune.</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">        numar_camera (str): Identificatorul unic al camerei (ex: &#39;101&#39;).</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">        etaj (int): Etajul unde este situată (util pentru repartizare).</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">        stare (str): Statusul curent (&#39;libera&#39;, &#39;ocupata&#39;, &#39;curatenie&#39;).</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">        tip_camera (ForeignKey): Legătura către definiția tipului (preț/facilități).</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="p">(</span><span class="s1">&#39;libera&#39;</span><span class="p">,</span> <span class="s1">&#39;Liberă&#39;</span><span class="p">),</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>        <span class="p">(</span><span class="s1">&#39;ocupata&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocupată&#39;</span><span class="p">),</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        <span class="p">(</span><span class="s1">&#39;curatenie&#39;</span><span class="p">,</span> <span class="s1">&#39;Curățenie&#39;</span><span class="p">),</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>    <span class="p">)</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>    
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>    <span class="n">numar_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>    <span class="n">etaj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>    <span class="n">stare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span><span class="p">)</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>    <span class="n">tip_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">TipCamera</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Camera </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_camera</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stare</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="c1"># 5. REZERVARE</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Rezervare</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">    Gestionează o rezervare creata de catre un client.</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">    </span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">    Este entitatea centrală care leagă Clientul de Camere pentru o anumita perioadă de timp.</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        client (ForeignKey): Clientul rezervării.</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">        camere (ManyToManyField): Lista camerelor rezervate (permite rezervarea mai multor camere pe același nume).</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        data_check_in (date): Data de început a rezervarii.</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">        data_check_out (date): Data de sfârșit a rezervarii.</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">        status (str): Starea rezervării (&#39;activa&#39; - curentă, &#39;anulata&#39;, &#39;finalizata&#39; - după check-out).</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>    <span class="n">camere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Camera</span><span class="p">)</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>    
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>    <span class="n">data_check_in</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="n">data_check_out</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span><span class="p">)</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>    
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Rezervare </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="c1"># 6. FACTURA</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Factura</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">    Document financiar emis automat la finalizarea rezervării.</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">        rezervare (OneToOneField): Rezervarea pentru care s-a emis factura.</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">        numar_factura (str): Serie unică generată automat (Format: F-{ID}-{DATA}).</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">        data_emitere (datetime): Momentul generării (de obicei la Check-Out).</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">        total_plata (Decimal): Suma totală de plată calculată automat.</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">        este_platita (bool): Flag/Stare pentru a marca încasarea banilor.</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>    <span class="n">rezervare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">Rezervare</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>    <span class="n">numar_factura</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>    <span class="n">data_emitere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>    <span class="n">total_plata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>    <span class="n">este_platita</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Factura </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_factura</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="c1"># 7. PROBLEMĂ (TICKET)</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Problema</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">    Sistem de ticketing pentru raportarea defecțiunilor tehnice.</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">    Attributes:</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">        titlu (str): Rezumatul scurt al problemei (ex: &#39;Bec ars camera 102&#39;).</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">        descriere (str): Detalii complete despre defecțiune.</span>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        data_raportare (datetime): Data și ora înregistrării (automată).</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">        rezolvata (bool): Statusul problemei (False = Activă, True = Rezolvată).</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        raportata_de (ForeignKey): Utilizatorul care a deschis tichetul.</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>    <span class="n">titlu</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>    <span class="n">data_raportare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a>    <span class="n">rezolvata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a>    <span class="n">raportata_de</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Utilizator</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">titlu</span>
 </span></pre></div>
 
 
@@ -516,22 +607,39 @@
 
     </div>
     <a class="headerlink" href="#Utilizator"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator-7"><a href="#Utilizator-7"><span class="linenos"> 7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Utilizator</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
-</span><span id="Utilizator-8"><a href="#Utilizator-8"><span class="linenos"> 8</span></a>    <span class="n">ROLE_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="Utilizator-9"><a href="#Utilizator-9"><span class="linenos"> 9</span></a>        <span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="s1">&#39;Manager&#39;</span><span class="p">),</span>
-</span><span id="Utilizator-10"><a href="#Utilizator-10"><span class="linenos">10</span></a>        <span class="p">(</span><span class="s1">&#39;receptioner&#39;</span><span class="p">,</span> <span class="s1">&#39;Recepționer&#39;</span><span class="p">),</span>
-</span><span id="Utilizator-11"><a href="#Utilizator-11"><span class="linenos">11</span></a>    <span class="p">)</span>
-</span><span id="Utilizator-12"><a href="#Utilizator-12"><span class="linenos">12</span></a>    <span class="n">rol</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ROLE_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;receptioner&#39;</span><span class="p">)</span>
-</span><span id="Utilizator-13"><a href="#Utilizator-13"><span class="linenos">13</span></a>    
-</span><span id="Utilizator-14"><a href="#Utilizator-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Utilizator-15"><a href="#Utilizator-15"><span class="linenos">15</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
-</span><span id="Utilizator-16"><a href="#Utilizator-16"><span class="linenos">16</span></a>        
-</span><span id="Utilizator-17"><a href="#Utilizator-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Utilizator-18"><a href="#Utilizator-18"><span class="linenos">18</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator-23"><a href="#Utilizator-23"><span class="linenos">23</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Utilizator</span><span class="p">(</span><span class="n">AbstractUser</span><span class="p">):</span>
+</span><span id="Utilizator-24"><a href="#Utilizator-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Utilizator-25"><a href="#Utilizator-25"><span class="linenos">25</span></a><span class="sd">    Model pentru utilizatorii sistemului (personalul pensiunii).</span>
+</span><span id="Utilizator-26"><a href="#Utilizator-26"><span class="linenos">26</span></a><span class="sd">    </span>
+</span><span id="Utilizator-27"><a href="#Utilizator-27"><span class="linenos">27</span></a><span class="sd">    Extinde clasa AbstractUser din Django pentru a adăuga roluri specifice</span>
+</span><span id="Utilizator-28"><a href="#Utilizator-28"><span class="linenos">28</span></a><span class="sd">    de acces.</span>
+</span><span id="Utilizator-29"><a href="#Utilizator-29"><span class="linenos">29</span></a>
+</span><span id="Utilizator-30"><a href="#Utilizator-30"><span class="linenos">30</span></a><span class="sd">    Attributes:</span>
+</span><span id="Utilizator-31"><a href="#Utilizator-31"><span class="linenos">31</span></a><span class="sd">        rol (str): Rolul utilizatorului în sistem. </span>
+</span><span id="Utilizator-32"><a href="#Utilizator-32"><span class="linenos">32</span></a><span class="sd">                   Poate fi &#39;manager&#39; (acces total) sau &#39;receptioner&#39; (acces operațional).</span>
+</span><span id="Utilizator-33"><a href="#Utilizator-33"><span class="linenos">33</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Utilizator-34"><a href="#Utilizator-34"><span class="linenos">34</span></a>    <span class="n">ROLE_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="Utilizator-35"><a href="#Utilizator-35"><span class="linenos">35</span></a>        <span class="p">(</span><span class="s1">&#39;manager&#39;</span><span class="p">,</span> <span class="s1">&#39;Manager&#39;</span><span class="p">),</span>
+</span><span id="Utilizator-36"><a href="#Utilizator-36"><span class="linenos">36</span></a>        <span class="p">(</span><span class="s1">&#39;receptioner&#39;</span><span class="p">,</span> <span class="s1">&#39;Recepționer&#39;</span><span class="p">),</span>
+</span><span id="Utilizator-37"><a href="#Utilizator-37"><span class="linenos">37</span></a>    <span class="p">)</span>
+</span><span id="Utilizator-38"><a href="#Utilizator-38"><span class="linenos">38</span></a>    <span class="n">rol</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ROLE_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;receptioner&#39;</span><span class="p">)</span>
+</span><span id="Utilizator-39"><a href="#Utilizator-39"><span class="linenos">39</span></a>    
+</span><span id="Utilizator-40"><a href="#Utilizator-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Utilizator-41"><a href="#Utilizator-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
+</span><span id="Utilizator-42"><a href="#Utilizator-42"><span class="linenos">42</span></a>        
+</span><span id="Utilizator-43"><a href="#Utilizator-43"><span class="linenos">43</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Utilizator-44"><a href="#Utilizator-44"><span class="linenos">44</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Utilizator(id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, rol)</p>
+            <div class="docstring"><p>Model pentru utilizatorii sistemului (personalul pensiunii).</p>
+
+<p>Extinde clasa AbstractUser din Django pentru a adăuga roluri specifice
+de acces.</p>
+
+<p>Attributes:
+    rol (str): Rolul utilizatorului în sistem. 
+               Poate fi 'manager' (acces total) sau 'receptioner' (acces operațional).</p>
 </div>
 
 
@@ -574,8 +682,8 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Utilizator.este_manager"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator.este_manager-14"><a href="#Utilizator.este_manager-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Utilizator.este_manager-15"><a href="#Utilizator.este_manager-15"><span class="linenos">15</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator.este_manager-40"><a href="#Utilizator.este_manager-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Utilizator.este_manager-41"><a href="#Utilizator.este_manager-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;manager&#39;</span>
 </span></pre></div>
 
 
@@ -593,8 +701,8 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Utilizator.este_receptioner"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator.este_receptioner-17"><a href="#Utilizator.este_receptioner-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Utilizator.este_receptioner-18"><a href="#Utilizator.este_receptioner-18"><span class="linenos">18</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Utilizator.este_receptioner-43"><a href="#Utilizator.este_receptioner-43"><span class="linenos">43</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">este_receptioner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Utilizator.este_receptioner-44"><a href="#Utilizator.este_receptioner-44"><span class="linenos">44</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;receptioner&#39;</span>
 </span></pre></div>
 
 
@@ -978,18 +1086,39 @@ class built by <code>create_forward_many_to_many_manager()</code> defined below.
 
     </div>
     <a class="headerlink" href="#Client"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Client-21"><a href="#Client-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="Client-22"><a href="#Client-22"><span class="linenos">22</span></a>    <span class="n">nume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="Client-23"><a href="#Client-23"><span class="linenos">23</span></a>    <span class="n">prenume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="Client-24"><a href="#Client-24"><span class="linenos">24</span></a>    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="Client-25"><a href="#Client-25"><span class="linenos">25</span></a>    <span class="n">telefon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-</span><span id="Client-26"><a href="#Client-26"><span class="linenos">26</span></a>    
-</span><span id="Client-27"><a href="#Client-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Client-28"><a href="#Client-28"><span class="linenos">28</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prenume</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Client-47"><a href="#Client-47"><span class="linenos">47</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="Client-48"><a href="#Client-48"><span class="linenos">48</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Client-49"><a href="#Client-49"><span class="linenos">49</span></a><span class="sd">    Stocheaza datele de identificare și contact ale oaspeților.</span>
+</span><span id="Client-50"><a href="#Client-50"><span class="linenos">50</span></a><span class="sd">    </span>
+</span><span id="Client-51"><a href="#Client-51"><span class="linenos">51</span></a><span class="sd">    Acest model este folosit pentru a ține istoricul clienților și pentru</span>
+</span><span id="Client-52"><a href="#Client-52"><span class="linenos">52</span></a><span class="sd">    a completa automat datele pe factură.</span>
+</span><span id="Client-53"><a href="#Client-53"><span class="linenos">53</span></a>
+</span><span id="Client-54"><a href="#Client-54"><span class="linenos">54</span></a><span class="sd">    Attributes:</span>
+</span><span id="Client-55"><a href="#Client-55"><span class="linenos">55</span></a><span class="sd">        nume (str): Numele de familie.</span>
+</span><span id="Client-56"><a href="#Client-56"><span class="linenos">56</span></a><span class="sd">        prenume (str): Prenumele clientului.</span>
+</span><span id="Client-57"><a href="#Client-57"><span class="linenos">57</span></a><span class="sd">        email (str): Adresa de email (trebuie să fie unica).</span>
+</span><span id="Client-58"><a href="#Client-58"><span class="linenos">58</span></a><span class="sd">        telefon (str): Numărul de telefon pentru contact rapid.</span>
+</span><span id="Client-59"><a href="#Client-59"><span class="linenos">59</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Client-60"><a href="#Client-60"><span class="linenos">60</span></a>    <span class="n">nume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="Client-61"><a href="#Client-61"><span class="linenos">61</span></a>    <span class="n">prenume</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="Client-62"><a href="#Client-62"><span class="linenos">62</span></a>    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Client-63"><a href="#Client-63"><span class="linenos">63</span></a>    <span class="n">telefon</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</span><span id="Client-64"><a href="#Client-64"><span class="linenos">64</span></a>    
+</span><span id="Client-65"><a href="#Client-65"><span class="linenos">65</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Client-66"><a href="#Client-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prenume</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Client(id, nume, prenume, email, telefon)</p>
+            <div class="docstring"><p>Stocheaza datele de identificare și contact ale oaspeților.</p>
+
+<p>Acest model este folosit pentru a ține istoricul clienților și pentru
+a completa automat datele pe factură.</p>
+
+<p>Attributes:
+    nume (str): Numele de familie.
+    prenume (str): Prenumele clientului.
+    email (str): Adresa de email (trebuie să fie unica).
+    telefon (str): Numărul de telefon pentru contact rapid.</p>
 </div>
 
 
@@ -1155,18 +1284,39 @@ class built by <code>create_forward_many_to_many_manager()</code> defined below.
 
     </div>
     <a class="headerlink" href="#TipCamera"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="TipCamera-31"><a href="#TipCamera-31"><span class="linenos">31</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TipCamera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="TipCamera-32"><a href="#TipCamera-32"><span class="linenos">32</span></a>    <span class="n">nume_tip</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-</span><span id="TipCamera-33"><a href="#TipCamera-33"><span class="linenos">33</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-</span><span id="TipCamera-34"><a href="#TipCamera-34"><span class="linenos">34</span></a>    <span class="n">facilitati</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="TipCamera-35"><a href="#TipCamera-35"><span class="linenos">35</span></a>    <span class="n">pret_per_noapte</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="TipCamera-36"><a href="#TipCamera-36"><span class="linenos">36</span></a>
-</span><span id="TipCamera-37"><a href="#TipCamera-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="TipCamera-38"><a href="#TipCamera-38"><span class="linenos">38</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume_tip</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pret_per_noapte</span><span class="si">}</span><span class="s2"> RON&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TipCamera-69"><a href="#TipCamera-69"><span class="linenos">69</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TipCamera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="TipCamera-70"><a href="#TipCamera-70"><span class="linenos">70</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="TipCamera-71"><a href="#TipCamera-71"><span class="linenos">71</span></a><span class="sd">    Lista pentru tipurile de camere disponibile și prețurile lor.</span>
+</span><span id="TipCamera-72"><a href="#TipCamera-72"><span class="linenos">72</span></a><span class="sd">    </span>
+</span><span id="TipCamera-73"><a href="#TipCamera-73"><span class="linenos">73</span></a><span class="sd">    Permite modificarea centralizată a prețurilor. Dacă prețul pentru </span>
+</span><span id="TipCamera-74"><a href="#TipCamera-74"><span class="linenos">74</span></a><span class="sd">    &#39;Camera Dublă&#39; se schimbă aici, se va reflecta la toate camerele de acest tip.</span>
+</span><span id="TipCamera-75"><a href="#TipCamera-75"><span class="linenos">75</span></a>
+</span><span id="TipCamera-76"><a href="#TipCamera-76"><span class="linenos">76</span></a><span class="sd">    Attributes:</span>
+</span><span id="TipCamera-77"><a href="#TipCamera-77"><span class="linenos">77</span></a><span class="sd">        nume_tip (str): Denumirea comercială (ex: &#39;Single&#39;, &#39;Matrimonială Deluxe&#39;).</span>
+</span><span id="TipCamera-78"><a href="#TipCamera-78"><span class="linenos">78</span></a><span class="sd">        descriere (str): Detalii despre dotări și spațiu.</span>
+</span><span id="TipCamera-79"><a href="#TipCamera-79"><span class="linenos">79</span></a><span class="sd">        facilitati (str): Listă de facilități (ex: &#39;TV, AC, Balcon&#39;).</span>
+</span><span id="TipCamera-80"><a href="#TipCamera-80"><span class="linenos">80</span></a><span class="sd">        pret_per_noapte (Decimal): Tariful standard per noapte în RON.</span>
+</span><span id="TipCamera-81"><a href="#TipCamera-81"><span class="linenos">81</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="TipCamera-82"><a href="#TipCamera-82"><span class="linenos">82</span></a>    <span class="n">nume_tip</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span><span id="TipCamera-83"><a href="#TipCamera-83"><span class="linenos">83</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span id="TipCamera-84"><a href="#TipCamera-84"><span class="linenos">84</span></a>    <span class="n">facilitati</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="TipCamera-85"><a href="#TipCamera-85"><span class="linenos">85</span></a>    <span class="n">pret_per_noapte</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="TipCamera-86"><a href="#TipCamera-86"><span class="linenos">86</span></a>
+</span><span id="TipCamera-87"><a href="#TipCamera-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TipCamera-88"><a href="#TipCamera-88"><span class="linenos">88</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nume_tip</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pret_per_noapte</span><span class="si">}</span><span class="s2"> RON&quot;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>TipCamera(id, nume_tip, descriere, facilitati, pret_per_noapte)</p>
+            <div class="docstring"><p>Lista pentru tipurile de camere disponibile și prețurile lor.</p>
+
+<p>Permite modificarea centralizată a prețurilor. Dacă prețul pentru 
+'Camera Dublă' se schimbă aici, se va reflecta la toate camerele de acest tip.</p>
+
+<p>Attributes:
+    nume_tip (str): Denumirea comercială (ex: 'Single', 'Matrimonială Deluxe').
+    descriere (str): Detalii despre dotări și spațiu.
+    facilitati (str): Listă de facilități (ex: 'TV, AC, Balcon').
+    pret_per_noapte (Decimal): Tariful standard per noapte în RON.</p>
 </div>
 
 
@@ -1332,24 +1482,39 @@ class built by <code>create_forward_many_to_many_manager()</code> defined below.
 
     </div>
     <a class="headerlink" href="#Camera"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Camera-41"><a href="#Camera-41"><span class="linenos">41</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="Camera-42"><a href="#Camera-42"><span class="linenos">42</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="Camera-43"><a href="#Camera-43"><span class="linenos">43</span></a>        <span class="p">(</span><span class="s1">&#39;libera&#39;</span><span class="p">,</span> <span class="s1">&#39;Liberă&#39;</span><span class="p">),</span>
-</span><span id="Camera-44"><a href="#Camera-44"><span class="linenos">44</span></a>        <span class="p">(</span><span class="s1">&#39;ocupata&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocupată&#39;</span><span class="p">),</span>
-</span><span id="Camera-45"><a href="#Camera-45"><span class="linenos">45</span></a>        <span class="p">(</span><span class="s1">&#39;curatenie&#39;</span><span class="p">,</span> <span class="s1">&#39;Curățenie&#39;</span><span class="p">),</span>
-</span><span id="Camera-46"><a href="#Camera-46"><span class="linenos">46</span></a>    <span class="p">)</span>
-</span><span id="Camera-47"><a href="#Camera-47"><span class="linenos">47</span></a>    
-</span><span id="Camera-48"><a href="#Camera-48"><span class="linenos">48</span></a>    <span class="n">numar_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="Camera-49"><a href="#Camera-49"><span class="linenos">49</span></a>    <span class="n">etaj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
-</span><span id="Camera-50"><a href="#Camera-50"><span class="linenos">50</span></a>    <span class="n">stare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span><span class="p">)</span>
-</span><span id="Camera-51"><a href="#Camera-51"><span class="linenos">51</span></a>    <span class="n">tip_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">TipCamera</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="Camera-52"><a href="#Camera-52"><span class="linenos">52</span></a>
-</span><span id="Camera-53"><a href="#Camera-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Camera-54"><a href="#Camera-54"><span class="linenos">54</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Camera </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_camera</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stare</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Camera-91"><a href="#Camera-91"><span class="linenos"> 91</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="Camera-92"><a href="#Camera-92"><span class="linenos"> 92</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Camera-93"><a href="#Camera-93"><span class="linenos"> 93</span></a><span class="sd">    Reprezintă o cameră fizică din pensiune.</span>
+</span><span id="Camera-94"><a href="#Camera-94"><span class="linenos"> 94</span></a>
+</span><span id="Camera-95"><a href="#Camera-95"><span class="linenos"> 95</span></a><span class="sd">    Attributes:</span>
+</span><span id="Camera-96"><a href="#Camera-96"><span class="linenos"> 96</span></a><span class="sd">        numar_camera (str): Identificatorul unic al camerei (ex: &#39;101&#39;).</span>
+</span><span id="Camera-97"><a href="#Camera-97"><span class="linenos"> 97</span></a><span class="sd">        etaj (int): Etajul unde este situată (util pentru repartizare).</span>
+</span><span id="Camera-98"><a href="#Camera-98"><span class="linenos"> 98</span></a><span class="sd">        stare (str): Statusul curent (&#39;libera&#39;, &#39;ocupata&#39;, &#39;curatenie&#39;).</span>
+</span><span id="Camera-99"><a href="#Camera-99"><span class="linenos"> 99</span></a><span class="sd">        tip_camera (ForeignKey): Legătura către definiția tipului (preț/facilități).</span>
+</span><span id="Camera-100"><a href="#Camera-100"><span class="linenos">100</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Camera-101"><a href="#Camera-101"><span class="linenos">101</span></a>    <span class="n">STATUS_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="Camera-102"><a href="#Camera-102"><span class="linenos">102</span></a>        <span class="p">(</span><span class="s1">&#39;libera&#39;</span><span class="p">,</span> <span class="s1">&#39;Liberă&#39;</span><span class="p">),</span>
+</span><span id="Camera-103"><a href="#Camera-103"><span class="linenos">103</span></a>        <span class="p">(</span><span class="s1">&#39;ocupata&#39;</span><span class="p">,</span> <span class="s1">&#39;Ocupată&#39;</span><span class="p">),</span>
+</span><span id="Camera-104"><a href="#Camera-104"><span class="linenos">104</span></a>        <span class="p">(</span><span class="s1">&#39;curatenie&#39;</span><span class="p">,</span> <span class="s1">&#39;Curățenie&#39;</span><span class="p">),</span>
+</span><span id="Camera-105"><a href="#Camera-105"><span class="linenos">105</span></a>    <span class="p">)</span>
+</span><span id="Camera-106"><a href="#Camera-106"><span class="linenos">106</span></a>    
+</span><span id="Camera-107"><a href="#Camera-107"><span class="linenos">107</span></a>    <span class="n">numar_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Camera-108"><a href="#Camera-108"><span class="linenos">108</span></a>    <span class="n">etaj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
+</span><span id="Camera-109"><a href="#Camera-109"><span class="linenos">109</span></a>    <span class="n">stare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">STATUS_CHOICES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span><span class="p">)</span>
+</span><span id="Camera-110"><a href="#Camera-110"><span class="linenos">110</span></a>    <span class="n">tip_camera</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">TipCamera</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="Camera-111"><a href="#Camera-111"><span class="linenos">111</span></a>
+</span><span id="Camera-112"><a href="#Camera-112"><span class="linenos">112</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Camera-113"><a href="#Camera-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Camera </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_camera</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stare</span><span class="si">}</span><span class="s2">)&quot;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Camera(id, numar_camera, etaj, stare, tip_camera)</p>
+            <div class="docstring"><p>Reprezintă o cameră fizică din pensiune.</p>
+
+<p>Attributes:
+    numar_camera (str): Identificatorul unic al camerei (ex: '101').
+    etaj (int): Etajul unde este situată (util pentru repartizare).
+    stare (str): Statusul curent ('libera', 'ocupata', 'curatenie').
+    tip_camera (ForeignKey): Legătura către definiția tipului (preț/facilități).</p>
 </div>
 
 
@@ -1564,20 +1729,41 @@ class built by <code>create_forward_many_to_many_manager()</code> defined below.
 
     </div>
     <a class="headerlink" href="#Rezervare"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Rezervare-57"><a href="#Rezervare-57"><span class="linenos">57</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Rezervare</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="Rezervare-58"><a href="#Rezervare-58"><span class="linenos">58</span></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="Rezervare-59"><a href="#Rezervare-59"><span class="linenos">59</span></a>    <span class="n">camere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Camera</span><span class="p">)</span>
-</span><span id="Rezervare-60"><a href="#Rezervare-60"><span class="linenos">60</span></a>    
-</span><span id="Rezervare-61"><a href="#Rezervare-61"><span class="linenos">61</span></a>    <span class="n">data_check_in</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="Rezervare-62"><a href="#Rezervare-62"><span class="linenos">62</span></a>    <span class="n">data_check_out</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
-</span><span id="Rezervare-63"><a href="#Rezervare-63"><span class="linenos">63</span></a>    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span><span class="p">)</span>
-</span><span id="Rezervare-64"><a href="#Rezervare-64"><span class="linenos">64</span></a>    
-</span><span id="Rezervare-65"><a href="#Rezervare-65"><span class="linenos">65</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Rezervare-66"><a href="#Rezervare-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Rezervare </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Rezervare-116"><a href="#Rezervare-116"><span class="linenos">116</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Rezervare</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="Rezervare-117"><a href="#Rezervare-117"><span class="linenos">117</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Rezervare-118"><a href="#Rezervare-118"><span class="linenos">118</span></a><span class="sd">    Gestionează o rezervare creata de catre un client.</span>
+</span><span id="Rezervare-119"><a href="#Rezervare-119"><span class="linenos">119</span></a><span class="sd">    </span>
+</span><span id="Rezervare-120"><a href="#Rezervare-120"><span class="linenos">120</span></a><span class="sd">    Este entitatea centrală care leagă Clientul de Camere pentru o anumita perioadă de timp.</span>
+</span><span id="Rezervare-121"><a href="#Rezervare-121"><span class="linenos">121</span></a>
+</span><span id="Rezervare-122"><a href="#Rezervare-122"><span class="linenos">122</span></a><span class="sd">    Attributes:</span>
+</span><span id="Rezervare-123"><a href="#Rezervare-123"><span class="linenos">123</span></a><span class="sd">        client (ForeignKey): Clientul rezervării.</span>
+</span><span id="Rezervare-124"><a href="#Rezervare-124"><span class="linenos">124</span></a><span class="sd">        camere (ManyToManyField): Lista camerelor rezervate (permite rezervarea mai multor camere pe același nume).</span>
+</span><span id="Rezervare-125"><a href="#Rezervare-125"><span class="linenos">125</span></a><span class="sd">        data_check_in (date): Data de început a rezervarii.</span>
+</span><span id="Rezervare-126"><a href="#Rezervare-126"><span class="linenos">126</span></a><span class="sd">        data_check_out (date): Data de sfârșit a rezervarii.</span>
+</span><span id="Rezervare-127"><a href="#Rezervare-127"><span class="linenos">127</span></a><span class="sd">        status (str): Starea rezervării (&#39;activa&#39; - curentă, &#39;anulata&#39;, &#39;finalizata&#39; - după check-out).</span>
+</span><span id="Rezervare-128"><a href="#Rezervare-128"><span class="linenos">128</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Rezervare-129"><a href="#Rezervare-129"><span class="linenos">129</span></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="Rezervare-130"><a href="#Rezervare-130"><span class="linenos">130</span></a>    <span class="n">camere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Camera</span><span class="p">)</span>
+</span><span id="Rezervare-131"><a href="#Rezervare-131"><span class="linenos">131</span></a>    
+</span><span id="Rezervare-132"><a href="#Rezervare-132"><span class="linenos">132</span></a>    <span class="n">data_check_in</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="Rezervare-133"><a href="#Rezervare-133"><span class="linenos">133</span></a>    <span class="n">data_check_out</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+</span><span id="Rezervare-134"><a href="#Rezervare-134"><span class="linenos">134</span></a>    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span><span class="p">)</span>
+</span><span id="Rezervare-135"><a href="#Rezervare-135"><span class="linenos">135</span></a>    
+</span><span id="Rezervare-136"><a href="#Rezervare-136"><span class="linenos">136</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Rezervare-137"><a href="#Rezervare-137"><span class="linenos">137</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Rezervare </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Rezervare(id, client, data_check_in, data_check_out, status)</p>
+            <div class="docstring"><p>Gestionează o rezervare creata de catre un client.</p>
+
+<p>Este entitatea centrală care leagă Clientul de Camere pentru o anumita perioadă de timp.</p>
+
+<p>Attributes:
+    client (ForeignKey): Clientul rezervării.
+    camere (ManyToManyField): Lista camerelor rezervate (permite rezervarea mai multor camere pe același nume).
+    data_check_in (date): Data de început a rezervarii.
+    data_check_out (date): Data de sfârșit a rezervarii.
+    status (str): Starea rezervării ('activa' - curentă, 'anulata', 'finalizata' - după check-out).</p>
 </div>
 
 
@@ -1859,19 +2045,36 @@ relation.</p>
 
     </div>
     <a class="headerlink" href="#Factura"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Factura-69"><a href="#Factura-69"><span class="linenos">69</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Factura</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="Factura-70"><a href="#Factura-70"><span class="linenos">70</span></a>    <span class="n">rezervare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">Rezervare</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="Factura-71"><a href="#Factura-71"><span class="linenos">71</span></a>    <span class="n">numar_factura</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="Factura-72"><a href="#Factura-72"><span class="linenos">72</span></a>    <span class="n">data_emitere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span id="Factura-73"><a href="#Factura-73"><span class="linenos">73</span></a>    <span class="n">total_plata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="Factura-74"><a href="#Factura-74"><span class="linenos">74</span></a>    <span class="n">este_platita</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="Factura-75"><a href="#Factura-75"><span class="linenos">75</span></a>
-</span><span id="Factura-76"><a href="#Factura-76"><span class="linenos">76</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Factura-77"><a href="#Factura-77"><span class="linenos">77</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Factura </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_factura</span><span class="si">}</span><span class="s2">&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Factura-140"><a href="#Factura-140"><span class="linenos">140</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Factura</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="Factura-141"><a href="#Factura-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Factura-142"><a href="#Factura-142"><span class="linenos">142</span></a><span class="sd">    Document financiar emis automat la finalizarea rezervării.</span>
+</span><span id="Factura-143"><a href="#Factura-143"><span class="linenos">143</span></a>
+</span><span id="Factura-144"><a href="#Factura-144"><span class="linenos">144</span></a><span class="sd">    Attributes:</span>
+</span><span id="Factura-145"><a href="#Factura-145"><span class="linenos">145</span></a><span class="sd">        rezervare (OneToOneField): Rezervarea pentru care s-a emis factura.</span>
+</span><span id="Factura-146"><a href="#Factura-146"><span class="linenos">146</span></a><span class="sd">        numar_factura (str): Serie unică generată automat (Format: F-{ID}-{DATA}).</span>
+</span><span id="Factura-147"><a href="#Factura-147"><span class="linenos">147</span></a><span class="sd">        data_emitere (datetime): Momentul generării (de obicei la Check-Out).</span>
+</span><span id="Factura-148"><a href="#Factura-148"><span class="linenos">148</span></a><span class="sd">        total_plata (Decimal): Suma totală de plată calculată automat.</span>
+</span><span id="Factura-149"><a href="#Factura-149"><span class="linenos">149</span></a><span class="sd">        este_platita (bool): Flag/Stare pentru a marca încasarea banilor.</span>
+</span><span id="Factura-150"><a href="#Factura-150"><span class="linenos">150</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Factura-151"><a href="#Factura-151"><span class="linenos">151</span></a>    <span class="n">rezervare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">Rezervare</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="Factura-152"><a href="#Factura-152"><span class="linenos">152</span></a>    <span class="n">numar_factura</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Factura-153"><a href="#Factura-153"><span class="linenos">153</span></a>    <span class="n">data_emitere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+</span><span id="Factura-154"><a href="#Factura-154"><span class="linenos">154</span></a>    <span class="n">total_plata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">(</span><span class="n">max_digits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="Factura-155"><a href="#Factura-155"><span class="linenos">155</span></a>    <span class="n">este_platita</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="Factura-156"><a href="#Factura-156"><span class="linenos">156</span></a>
+</span><span id="Factura-157"><a href="#Factura-157"><span class="linenos">157</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Factura-158"><a href="#Factura-158"><span class="linenos">158</span></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Factura </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">numar_factura</span><span class="si">}</span><span class="s2">&quot;</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Factura(id, rezervare, numar_factura, data_emitere, total_plata, este_platita)</p>
+            <div class="docstring"><p>Document financiar emis automat la finalizarea rezervării.</p>
+
+<p>Attributes:
+    rezervare (OneToOneField): Rezervarea pentru care s-a emis factura.
+    numar_factura (str): Serie unică generată automat (Format: F-{ID}-{DATA}).
+    data_emitere (datetime): Momentul generării (de obicei la Check-Out).
+    total_plata (Decimal): Suma totală de plată calculată automat.
+    este_platita (bool): Flag/Stare pentru a marca încasarea banilor.</p>
 </div>
 
 
@@ -2082,19 +2285,36 @@ object the first time, the query is executed.</p>
 
     </div>
     <a class="headerlink" href="#Problema"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Problema-80"><a href="#Problema-80"><span class="linenos">80</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Problema</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-</span><span id="Problema-81"><a href="#Problema-81"><span class="linenos">81</span></a>    <span class="n">titlu</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-</span><span id="Problema-82"><a href="#Problema-82"><span class="linenos">82</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
-</span><span id="Problema-83"><a href="#Problema-83"><span class="linenos">83</span></a>    <span class="n">data_raportare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="Problema-84"><a href="#Problema-84"><span class="linenos">84</span></a>    <span class="n">rezolvata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="Problema-85"><a href="#Problema-85"><span class="linenos">85</span></a>    <span class="n">raportata_de</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Utilizator</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-</span><span id="Problema-86"><a href="#Problema-86"><span class="linenos">86</span></a>
-</span><span id="Problema-87"><a href="#Problema-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Problema-88"><a href="#Problema-88"><span class="linenos">88</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">titlu</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Problema-161"><a href="#Problema-161"><span class="linenos">161</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Problema</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span><span id="Problema-162"><a href="#Problema-162"><span class="linenos">162</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Problema-163"><a href="#Problema-163"><span class="linenos">163</span></a><span class="sd">    Sistem de ticketing pentru raportarea defecțiunilor tehnice.</span>
+</span><span id="Problema-164"><a href="#Problema-164"><span class="linenos">164</span></a>
+</span><span id="Problema-165"><a href="#Problema-165"><span class="linenos">165</span></a><span class="sd">    Attributes:</span>
+</span><span id="Problema-166"><a href="#Problema-166"><span class="linenos">166</span></a><span class="sd">        titlu (str): Rezumatul scurt al problemei (ex: &#39;Bec ars camera 102&#39;).</span>
+</span><span id="Problema-167"><a href="#Problema-167"><span class="linenos">167</span></a><span class="sd">        descriere (str): Detalii complete despre defecțiune.</span>
+</span><span id="Problema-168"><a href="#Problema-168"><span class="linenos">168</span></a><span class="sd">        data_raportare (datetime): Data și ora înregistrării (automată).</span>
+</span><span id="Problema-169"><a href="#Problema-169"><span class="linenos">169</span></a><span class="sd">        rezolvata (bool): Statusul problemei (False = Activă, True = Rezolvată).</span>
+</span><span id="Problema-170"><a href="#Problema-170"><span class="linenos">170</span></a><span class="sd">        raportata_de (ForeignKey): Utilizatorul care a deschis tichetul.</span>
+</span><span id="Problema-171"><a href="#Problema-171"><span class="linenos">171</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Problema-172"><a href="#Problema-172"><span class="linenos">172</span></a>    <span class="n">titlu</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span><span id="Problema-173"><a href="#Problema-173"><span class="linenos">173</span></a>    <span class="n">descriere</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</span><span id="Problema-174"><a href="#Problema-174"><span class="linenos">174</span></a>    <span class="n">data_raportare</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="Problema-175"><a href="#Problema-175"><span class="linenos">175</span></a>    <span class="n">rezolvata</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="Problema-176"><a href="#Problema-176"><span class="linenos">176</span></a>    <span class="n">raportata_de</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Utilizator</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+</span><span id="Problema-177"><a href="#Problema-177"><span class="linenos">177</span></a>
+</span><span id="Problema-178"><a href="#Problema-178"><span class="linenos">178</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Problema-179"><a href="#Problema-179"><span class="linenos">179</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">titlu</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Problema(id, titlu, descriere, data_raportare, rezolvata, raportata_de)</p>
+            <div class="docstring"><p>Sistem de ticketing pentru raportarea defecțiunilor tehnice.</p>
+
+<p>Attributes:
+    titlu (str): Rezumatul scurt al problemei (ex: 'Bec ars camera 102').
+    descriere (str): Detalii complete despre defecțiune.
+    data_raportare (datetime): Data și ora înregistrării (automată).
+    rezolvata (bool): Statusul problemei (False = Activă, True = Rezolvată).
+    raportata_de (ForeignKey): Utilizatorul care a deschis tichetul.</p>
 </div>
 
 
