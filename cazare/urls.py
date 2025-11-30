@@ -2,6 +2,21 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
+"""
+Configurarea Rutelor URL.
+
+Acest modul funcționează ca o "hartă" a site-ului. Leagă adresele accesate
+de utilizator în browser (ex: '/rezervari/') de funcțiile Python corespunzătoare
+din 'views.py'.
+
+Rute Principale:
+- / : Dashboard-ul principal (homepage).
+- /login & /logout : Sistemul de autentificare.
+- /rezervare-noua/ : Formularul de creare rezervări.
+- /rezervare/checkout/... : Procesul de finalizare și facturare.
+- /rapoarte/ : Zona de statistici pentru manageri.
+"""
+
 urlpatterns = [
     # Cand adresa e goala (''), cheama functia homepage
     path('', views.homepage, name='acasa'),
