@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -128,3 +129,10 @@ AUTH_USER_MODEL = 'cazare.Utilizator'
 LOGIN_REDIRECT_URL = 'acasa'   # Numele rutei pentru homepage
 LOGOUT_REDIRECT_URL = 'login'  # Numele rutei pentru login
 LOGIN_URL = 'login'            # Unde te trimite daca incerci sa intri undeva fara voie
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Pensiunea Schilacy",
+    "site_header": "Administrare Pensiune",
+    "welcome_sign": "Bine ați venit în panoul de control!",
+    "search_model": "cazare.Rezervare",  # Bara de search va căuta direct rezervări
+}
