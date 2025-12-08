@@ -130,9 +130,47 @@ LOGIN_REDIRECT_URL = 'acasa'   # Numele rutei pentru homepage
 LOGOUT_REDIRECT_URL = 'login'  # Numele rutei pentru login
 LOGIN_URL = 'login'            # Unde te trimite daca incerci sa intri undeva fara voie
 
+# --- JAZZMIN SETTINGS ---
 JAZZMIN_SETTINGS = {
-    "site_title": "Pensiunea Schilacy",
-    "site_header": "Administrare Pensiune",
-    "welcome_sign": "Bine ați venit în panoul de control!",
-    "search_model": "cazare.Rezervare",  # Bara de search va căuta direct rezervări
+    # Titlul care apare in tab-ul browserului
+    "site_title": "Pensiunea Schilacy Admin",
+
+    # Titlul de pe ecranul de login
+    "site_header": "Pensiunea Schilacy",
+
+    # Logo-ul text (daca nu ai poza)
+    "site_brand": "Schilacy PMS",
+
+    # Mesajul de bun venit de pe ecranul de login
+    "welcome_sign": "Bine ați venit în panoul de administrare",
+
+    # Copyright-ul de jos
+    "copyright": "Pensiunea Schilacy Ltd",
+
+    # Bara de cautare (Search) va cauta automat in Rezervari (foarte util!)
+    "search_model": ["cazare.Rezervare"],
+
+    # Meniul lateral (Customizam ordinea iconitelor)
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        
+        "cazare.Utilizator": "fas fa-user-shield",
+        "cazare.Rezervare": "fas fa-calendar-check",
+        "cazare.Camera": "fas fa-bed",
+        "cazare.TipCamera": "fas fa-layer-group",
+        "cazare.Client": "fas fa-address-book",
+        "cazare.Factura": "fas fa-file-invoice-dollar",
+        "cazare.Problema": "fas fa-tools",
+    },
+    
+    # Ordinea in meniu
+    "order_with_respect_to": ["cazare.Rezervare", "cazare.Camera", "cazare.Client", "cazare.Factura"],
+}
+
+# --- JAZZMIN UI TWEAKS (Culori) ---
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",   # Poti incerca si: 'darkly', 'journal', 'simplex', 'slate'
+    # "dark_mode_theme": "darkly", # Activeaza asta daca vrei mod intunecat automat
 }
