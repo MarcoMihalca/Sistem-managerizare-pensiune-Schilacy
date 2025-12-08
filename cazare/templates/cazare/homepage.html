@@ -1,81 +1,71 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <title>Pensiunea Schilacy</title>
-</head>
-<body>
+{% extends 'cazare/base.html' %}
 
-<div style="background: #333; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-    <span>👤 Logat ca: <strong>{{ user.username }}</strong> ({{ user.rol|upper }})</span>
-    
-    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
-        {% csrf_token %}
-        <button type="submit" style="background: red; border: none; color: white; cursor: pointer; padding: 5px 10px;">Ieșire Cont</button>
-    </form>
-</div>
-
-    <h1>Bine ați venit la Pensiunea Schilacy!</h1>
-    
-    <a href="{% url 'creare_rezervare' %}">
-        <button style="padding: 10px; background-color: green; color: white; font-weight: bold;">
-            + Adaugă Rezervare
-        </button>
-    </a>
-    
-    <a href="{% url 'lista_rezervari' %}">
-        <button style="padding: 10px; background-color: #007bff; color: white;">
-            📋 Vezi Tabel Rezervări
-        </button>
-    </a>
-
-    <hr>
-    <p>Sistem de gestiune hotelieră - Versiune Backend</p>
-    <hr>
-    
-    <h3>Oferta noastră de cazare:</h3>
-    <ul>
-        {% for camera in tipuri %}
-            <li>
-                <strong>{{ camera.nume_tip }}</strong> 
-                - Preț: {{ camera.pret_per_noapte }} RON
-                <br>
-                <small>Descriere: {{ camera.descriere }}</small>
-                <br>
-                <small>Facilități: {{ camera.facilitati }}</small>
-                <hr>
-            </li>
-        {% empty %}
-            <p>Nu există oferte disponibile momentan.</p>
-        {% endfor %}
-    </ul>
-
-    <hr>
-    
-    <h3>Mentenanță & Suport:</h3>
-    <a href="{% url 'raporteaza_problema' %}">
-        <button style="color: red; padding: 10px;">⚠️ Raportează o Problemă</button>
-    </a>
-
-    {% if user.rol == 'manager' or user.is_superuser %}
-        <br><br>
-        <div style="border: 2px solid #333; background-color: #f4f4f4; padding: 15px;">
-            <h3 style="margin-top: 0;">🛡️ Panou Manager</h3>
-            <p>Opțiuni administrative:</p>
-
-            <a href="{% url 'rapoarte_manager' %}">
-                <button style="padding: 10px; background-color: #333; color: white;">
-                    📊 Rapoarte Financiare
-                </button>
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🏠 Dashboard</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'creare_rezervare' %}" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Rezervare Nouă
             </a>
-            
-            <a href="{% url 'lista_probleme' %}">
-                <button style="padding: 10px; background-color: #555; color: white;">
-                    🛠️ Vezi Tichete Tehnice
-                </button>
+            <a href="{% url 'lista_rezervari' %}" class="btn btn-primary">
+                <i class="fa-solid fa-list"></i> Registru Rezervări
             </a>
         </div>
-    {% endif %}
+    </div>
 
-</body>
-</html>
+    <h4 class="mb-3 text-muted"><i class="fa-solid fa-bed"></i> Tipuri de Camere</h4>
+    <div class="row">
+        {% for camera in tipuri %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <strong>{{ camera.nume_tip }}</strong>
+                        <span class="badge bg-warning text-dark">{{ camera.pret_per_noapte }} RON</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ camera.descriere }}</p>
+                        <hr>
+                        <small class="text-muted"><i class="fa-solid fa-star"></i> {{ camera.facilitati }}</small>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">Nu există tipuri de camere definite în sistem.</div>
+        {% endfor %}
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        {% if user.rol == 'manager' or user.is_superuser %}
+        <div class="col-md-6 mb-3">
+            <div class="card border-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-warning"><i class="fa-solid fa-user-tie"></i> Panou Manager</h5>
+                    <p class="card-text">Acces la statistici financiare și rapoarte de performanță.</p>
+                    <a href="{% url 'rapoarte_manager' %}" class="btn btn-outline-dark">
+                        📊 Vezi Rapoarte
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="col-md-6 mb-3">
+            <div class="card border-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-danger"><i class="fa-solid fa-screwdriver-wrench"></i> Mentenanță</h5>
+                    <p class="card-text">Gestionează defecțiunile raportate în camere.</p>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'raporteaza_problema' %}" class="btn btn-danger text-white">
+                            ⚠️ Raportează
+                        </a>
+                        <a href="{% url 'lista_probleme' %}" class="btn btn-outline-danger">
+                            🛠️ Vezi Tichete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

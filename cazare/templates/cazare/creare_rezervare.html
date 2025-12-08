@@ -1,21 +1,31 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <title>Rezervare Nouă</title>
-</head>
-<body>
-    <h1>Adaugă o Rezervare Nouă</h1>
-    
-    <form method="post">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
-        
-        <button type="submit">Salvează Rezervarea</button>
-    </form>
-    
-    <br>
-    <a href="{% url 'acasa' %}">Înapoi la prima pagină</a>
-</body>
-</html>
+{% extends 'cazare/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fa-solid fa-calendar-plus"></i> Rezervare Nouă</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="vstack gap-3">
+                        {{ form.as_p }}
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'acasa' %}" class="btn btn-secondary">Anulează</a>
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="fa-solid fa-save"></i> Salvează Rezervarea
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

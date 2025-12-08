@@ -1,81 +1,83 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista Rezervări</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .activa { background-color: #d4edda; } /* Verde */
-        .finalizata { background-color: #e2e3e5; } /* Gri */
-        .anulata { background-color: #f8d7da; } /* Rosu */
-    </style>
-</head>
-<body>
-    <h1>Panou Control Rezervări</h1>
-    <a href="{% url 'creare_rezervare' %}"> + Adaugă Rezervare Nouă</a>
-    <a href="{% url 'acasa' %}"> Înapoi Acasă</a>
-    <hr>
+{% extends 'cazare/base.html' %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Client</th>
-                <th>Camere</th>
-                <th>Check-In</th>
-                <th>Check-Out</th>
-                <th>Status</th>
-                <th>Acțiuni</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for rez in rezervari %}
-            <tr class="{{ rez.status }}">
-                <td>#{{ rez.id }}</td>
-                <td>{{ rez.client }}</td>
-                <td>
-                    {% for cam in rez.camere.all %}
-                        {{ cam.numar_camera }} 
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📋 Registru Rezervări</h2>
+        <a href="{% url 'creare_rezervare' %}" class="btn btn-success">
+            <i class="fa-solid fa-plus"></i> Adaugă
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Camere</th>
+                        <th>Perioada</th>
+                        <th>Status</th>
+                        <th class="text-end">Acțiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rez in rezervari %}
+                    <tr>
+                        <td><strong>#{{ rez.id }}</strong></td>
+                        <td>
+                            <i class="fa-solid fa-user"></i> {{ rez.client }}
+                        </td>
+                        <td>
+                            {% for cam in rez.camere.all %}
+                                <span class="badge bg-secondary">{{ cam.numar_camera }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <small>
+                                {{ rez.data_check_in|date:"d M" }} <i class="fa-solid fa-arrow-right mx-1 text-muted"></i> {{ rez.data_check_out|date:"d M Y" }}
+                            </small>
+                        </td>
+                        <td>
+                            {% if rez.status == 'activa' %}
+                                <span class="badge bg-success">ACTIVĂ</span>
+                            {% elif rez.status == 'anulata' %}
+                                <span class="badge bg-danger">ANULATĂ</span>
+                            {% else %}
+                                <span class="badge bg-secondary">FINALIZATĂ</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="text-end">
+                            {% if rez.status == 'activa' %}
+                                <a href="{% url 'efectueaza_check_out' rez.id %}" 
+                                   class="btn btn-sm btn-primary"
+                                   onclick="return confirm('Confirmi check-out-ul? Se va genera factura.');">
+                                   <i class="fa-solid fa-check-double"></i> Check-Out
+                                </a>
+                                <a href="{% url 'anuleaza_rezervare' rez.id %}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Sigur anulezi aceasta rezervare?');">
+                                    <i class="fa-solid fa-times"></i>
+                                </a>
+                            {% elif rez.status == 'finalizata' %}
+                                 <a href="{% url 'vizualizare_factura' rez.factura.id %}" class="btn btn-sm btn-dark" target="_blank">
+                                    <i class="fa-solid fa-file-invoice"></i> Factură
+                                 </a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            Nu există rezervări înregistrate.
+                        </td>
+                    </tr>
                     {% endfor %}
-                </td>
-                <td>{{ rez.data_check_in }}</td>
-                <td>{{ rez.data_check_out }}</td>
-                <td><strong>{{ rez.status|upper }}</strong></td>
-                
-                <td>
-                    {% if rez.status == 'activa' %}
-                        <a href="{% url 'anuleaza_rezervare' rez.id %}" 
-                           onclick="return confirm('Sigur anulezi aceasta rezervare?');" 
-                           style="color: red; font-weight: bold;">
-                            Anulează
-                        </a>
-                        | 
-                        <a href="{% url 'efectueaza_check_out' rez.id %}" 
-                           onclick="return confirm('Confirmi check-out-ul? Se va genera factura.');"
-                           style="color: blue; font-weight: bold;">
-                           Check-Out
-                        </a>
-
-                    {% else %}
-                        {% if rez.status == 'finalizata' %}
-                             <a href="{% url 'vizualizare_factura' rez.factura.id %}" target="_blank">
-                                📄 Vezi Factura
-                             </a>
-                        {% else %}
-                             -
-                        {% endif %}
-
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7">Nu există rezervări înregistrate.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
