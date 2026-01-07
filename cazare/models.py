@@ -109,7 +109,7 @@ class Camera(models.Model):
     tip_camera = models.ForeignKey(TipCamera, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Camera {self.numar_camera} ({self.stare})"
+        return f"{self.numar_camera} ({self.tip_camera.nume_tip}) - Etaj {self.etaj}"
 
 # 5. REZERVARE
 class Rezervare(models.Model):

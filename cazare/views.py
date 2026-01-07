@@ -4,6 +4,7 @@ from .forms import RezervareForm , ProblemaForm # <-- Am importat formularul cre
 from django.utils import timezone
 from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required # <-- Adauga asta sus de tot
+from django.contrib import messages
 
 """
 Modulul Views (Logica de Business).
@@ -40,35 +41,65 @@ def homepage(request):
 
 # --- Functia Noua ---
 @login_required
+@login_required
 def creare_rezervare(request):
-    """
-    Gestionează procesul de creare a unei noi rezervări.
-
-    Dacă cererea este POST (formular trimis):
-        - Validează datele folosind RezervareForm.
-        - Salvează rezervarea în baza de date.
-        - Redirecționează utilizatorul către prima pagină.
-    Dacă cererea este GET (accesare pagină):
-        - Afișează un formular gol.
-
-    Args:
-        request (HttpRequest): Obiectul cererii HTTP.
-
-    Returns:
-        HttpResponse: Pagina cu formularul sau redirect după succes.
-    """
     if request.method == 'POST':
-        # Daca userul a apasat butonul "Salveaza"
         form = RezervareForm(request.POST)
         if form.is_valid():
-            form.save()  # Salvam in baza de date
-            return redirect('acasa')  # Il trimitem inapoi la prima pagina
+            # 1. Extragem datele din formular (fara sa salvam inca)
+            rezervare_noua = form.save(commit=False)
+            
+            check_in = form.cleaned_data['data_check_in']
+            check_out = form.cleaned_data['data_check_out']
+            camere_selectate = form.cleaned_data['camere'] # Lista de camere bifate
+
+            # Validare simpla: Check-out sa nu fie inainte de Check-in
+            if check_out <= check_in:
+                messages.error(request, "Eroare: Data de Check-Out trebuie să fie după Check-In!")
+                return render(request, 'cazare/creare_rezervare.html', {'form': form})
+
+            # 2. VERIFICAREA DE SUPRAPUNERE (Partea cruciala)
+            conflict = False
+            mesaj_eroare = ""
+
+            for camera in camere_selectate:
+                # Cautam rezervari ACTIVE care se suprapun
+                # Excludem rezervarile anulate sau finalizate
+                suprapuneri = Rezervare.objects.filter(
+                    camere=camera,
+                    status='activa', # Verificam doar rezervarile active
+                    data_check_in__lt=check_out, # Inceput vechi < Sfarsit nou
+                    data_check_out__gt=check_in  # Sfarsit vechi > Inceput nou
+                )
+
+                if suprapuneri.exists():
+                    conflict = True
+                    # Luam prima rezervare care incurca ca sa spunem cine e
+                    rez_existenta = suprapuneri.first()
+                    mesaj_eroare = f"Camera {camera} este deja ocupată în perioada aleasă! (Rezervare ID: {rez_existenta.id})"
+                    break # Ne oprim la prima eroare gasita
+
+            if conflict:
+                # Daca e conflict, NU salvam. Dam eroare pe ecran.
+                messages.error(request, mesaj_eroare)
+                # Trimitem formularul inapoi ca sa mai incerce o data
+                return render(request, 'cazare/creare_rezervare.html', {'form': form})
+            
+            # 3. Daca nu e niciun conflict, salvam totul
+            rezervare_noua.save()
+            form.save_m2m() # Salvam relatia Many-to-Many cu camerele
+            
+            # Actualizam starea camerelor vizual (optional, pentru ca acum avem verificarea logica)
+            for camera in camere_selectate:
+                camera.stare = 'ocupata'
+                camera.save()
+
+            messages.success(request, "Rezervarea a fost creată cu succes!")
+            return redirect('lista_rezervari')
     else:
-        # Daca userul doar a intrat pe pagina
         form = RezervareForm()
-
+    
     return render(request, 'cazare/creare_rezervare.html', {'form': form})
-
 @login_required
 def lista_rezervari(request):
     """
