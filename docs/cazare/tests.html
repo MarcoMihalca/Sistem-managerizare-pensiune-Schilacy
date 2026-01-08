@@ -28,6 +28,31 @@
 
 
 
+            <h2>API Documentation</h2>
+                <ul class="memberlist">
+            <li>
+                    <a class="variable" href="#User">User</a>
+            </li>
+            <li>
+                    <a class="class" href="#TestPensiune">TestPensiune</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#TestPensiune.setUp">setUp</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TestPensiune.test_homepage_status">test_homepage_status</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TestPensiune.test_acces_rapoarte_nelogat">test_acces_rapoarte_nelogat</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#TestPensiune.test_creare_rezervare_si_calcul">test_creare_rezervare_si_calcul</a>
+                        </li>
+                </ul>
+
+            </li>
+    </ul>
+
 
 
         <a class="attribution" title="pdoc: Python API documentation generator" href="https://pdoc.dev" target="_blank">
@@ -47,13 +72,368 @@
 
                         <label class="view-source-button" for="mod-tests-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="c1"># Create your tests here.</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">TipCamera</span><span class="p">,</span> <span class="n">Camera</span><span class="p">,</span> <span class="n">Rezervare</span><span class="p">,</span> <span class="n">Client</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">timedelta</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="c1"># Luam modelul nostru de utilizator personalizat</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPensiune</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>    
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="c1"># setUp este o functie speciala care ruleaza INAINTE de fiecare test</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="c1"># Aici pregatim terenul (cream date false de test)</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="c1"># 1. Cream un user Manager ca sa ne putem loga</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> 
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>            <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">,</span> 
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>            <span class="n">rol</span><span class="o">=</span><span class="s1">&#39;manager&#39;</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="c1"># 2. Cream un Tip de Camera (Ex: Standard - 100 RON)</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span> <span class="o">=</span> <span class="n">TipCamera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>            <span class="n">nume_tip</span><span class="o">=</span><span class="s2">&quot;Camera Standard&quot;</span><span class="p">,</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>            <span class="n">pret_per_noapte</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>            <span class="n">descriere</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>            <span class="n">facilitati</span><span class="o">=</span><span class="s2">&quot;Wifi&quot;</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="p">)</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="c1"># 3. Cream o Camera fizica</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span> <span class="o">=</span> <span class="n">Camera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>            <span class="n">numar_camera</span><span class="o">=</span><span class="s2">&quot;101&quot;</span><span class="p">,</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>            <span class="n">tip_camera</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span><span class="p">,</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>            <span class="n">stare</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span> <span class="p">,</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>            <span class="n">etaj</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="p">)</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="c1"># 4. Cream un Client</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>            <span class="n">nume</span><span class="o">=</span><span class="s2">&quot;Popescu&quot;</span><span class="p">,</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>            <span class="n">prenume</span><span class="o">=</span><span class="s2">&quot;Ion&quot;</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="n">telefon</span><span class="o">=</span><span class="s2">&quot;0700000000&quot;</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;ion@test.com&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="c1"># --- TESTUL 1: Verificam daca paginile merg (Homepage) ---</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_homepage_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="c1"># Ne logam virtual</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">)</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>        
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>        <span class="c1"># Incercam sa accesam pagina principala (&#39;acasa&#39; e numele din urls.py)</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;acasa&#39;</span><span class="p">))</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>        
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>        <span class="c1"># Codul 200 inseamna &quot;OK Success&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="c1"># --- TESTUL 2: Securitate (Cineva nelogat nu are voie la Rapoarte) ---</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_acces_rapoarte_nelogat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="c1"># Ne asiguram ca NU suntem logati</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>        
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>        <span class="c1"># Incercam sa intram la rapoarte</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;rapoarte_manager&#39;</span><span class="p">))</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>        <span class="c1"># Ar trebui sa NU primim 200 (OK), ci 302 (Redirect catre Login)</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>    <span class="c1"># --- TESTUL 3: Logica de Business (Calcul matematic) ---</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_creare_rezervare_si_calcul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="c1"># Simulam o rezervare de 3 nopti</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>        <span class="n">data_in</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>        <span class="n">data_out</span> <span class="o">=</span> <span class="n">data_in</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 3 nopti</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="n">rezervare</span> <span class="o">=</span> <span class="n">Rezervare</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>            <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span><span class="p">,</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>            <span class="n">data_check_in</span><span class="o">=</span><span class="n">data_in</span><span class="p">,</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>            <span class="n">data_check_out</span><span class="o">=</span><span class="n">data_out</span><span class="p">,</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>            <span class="n">status</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>        <span class="p">)</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>        <span class="n">rezervare</span><span class="o">.</span><span class="n">camere</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="p">)</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>        
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>        <span class="c1"># Verificam matematica:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>        <span class="c1"># 3 nopti * 100 RON (pretul camerei create in setUp) = 300 RON</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>        
+</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>        <span class="c1"># Calculam durata</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>        <span class="n">durata</span> <span class="o">=</span> <span class="p">(</span><span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_out</span> <span class="o">-</span> <span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_in</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a>        <span class="n">pret_total</span> <span class="o">=</span> <span class="n">durata</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="o">.</span><span class="n">tip_camera</span><span class="o">.</span><span class="n">pret_per_noapte</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>        
+</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>        <span class="c1"># AssertEqual verifica daca (300 == 300)</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">durata</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pret_total</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
 </span></pre></div>
 
 
             </section>
+                <section id="User">
+                    <div class="attr variable">
+            <span class="name">User</span>        =
+<span class="default_value">&lt;class &#39;<a href="models.html#Utilizator">cazare.models.Utilizator</a>&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#User"></a>
+    
+    
+
+                </section>
+                <section id="TestPensiune">
+                            <input id="TestPensiune-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">TestPensiune</span><wbr>(<span class="base">django.test.testcases.TestCase</span>):
+
+                <label class="view-source-button" for="TestPensiune-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#TestPensiune"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TestPensiune-11"><a href="#TestPensiune-11"><span class="linenos">11</span></a><span class="k">class</span><span class="w"> </span><span class="nc">TestPensiune</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+</span><span id="TestPensiune-12"><a href="#TestPensiune-12"><span class="linenos">12</span></a>    
+</span><span id="TestPensiune-13"><a href="#TestPensiune-13"><span class="linenos">13</span></a>    <span class="c1"># setUp este o functie speciala care ruleaza INAINTE de fiecare test</span>
+</span><span id="TestPensiune-14"><a href="#TestPensiune-14"><span class="linenos">14</span></a>    <span class="c1"># Aici pregatim terenul (cream date false de test)</span>
+</span><span id="TestPensiune-15"><a href="#TestPensiune-15"><span class="linenos">15</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune-16"><a href="#TestPensiune-16"><span class="linenos">16</span></a>        <span class="c1"># 1. Cream un user Manager ca sa ne putem loga</span>
+</span><span id="TestPensiune-17"><a href="#TestPensiune-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+</span><span id="TestPensiune-18"><a href="#TestPensiune-18"><span class="linenos">18</span></a>            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> 
+</span><span id="TestPensiune-19"><a href="#TestPensiune-19"><span class="linenos">19</span></a>            <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">,</span> 
+</span><span id="TestPensiune-20"><a href="#TestPensiune-20"><span class="linenos">20</span></a>            <span class="n">rol</span><span class="o">=</span><span class="s1">&#39;manager&#39;</span>
+</span><span id="TestPensiune-21"><a href="#TestPensiune-21"><span class="linenos">21</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune-22"><a href="#TestPensiune-22"><span class="linenos">22</span></a>        
+</span><span id="TestPensiune-23"><a href="#TestPensiune-23"><span class="linenos">23</span></a>        <span class="c1"># 2. Cream un Tip de Camera (Ex: Standard - 100 RON)</span>
+</span><span id="TestPensiune-24"><a href="#TestPensiune-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span> <span class="o">=</span> <span class="n">TipCamera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune-25"><a href="#TestPensiune-25"><span class="linenos">25</span></a>            <span class="n">nume_tip</span><span class="o">=</span><span class="s2">&quot;Camera Standard&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-26"><a href="#TestPensiune-26"><span class="linenos">26</span></a>            <span class="n">pret_per_noapte</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+</span><span id="TestPensiune-27"><a href="#TestPensiune-27"><span class="linenos">27</span></a>            <span class="n">descriere</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-28"><a href="#TestPensiune-28"><span class="linenos">28</span></a>            <span class="n">facilitati</span><span class="o">=</span><span class="s2">&quot;Wifi&quot;</span>
+</span><span id="TestPensiune-29"><a href="#TestPensiune-29"><span class="linenos">29</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune-30"><a href="#TestPensiune-30"><span class="linenos">30</span></a>        
+</span><span id="TestPensiune-31"><a href="#TestPensiune-31"><span class="linenos">31</span></a>        <span class="c1"># 3. Cream o Camera fizica</span>
+</span><span id="TestPensiune-32"><a href="#TestPensiune-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span> <span class="o">=</span> <span class="n">Camera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune-33"><a href="#TestPensiune-33"><span class="linenos">33</span></a>            <span class="n">numar_camera</span><span class="o">=</span><span class="s2">&quot;101&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-34"><a href="#TestPensiune-34"><span class="linenos">34</span></a>            <span class="n">tip_camera</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span><span class="p">,</span>
+</span><span id="TestPensiune-35"><a href="#TestPensiune-35"><span class="linenos">35</span></a>            <span class="n">stare</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span> <span class="p">,</span>
+</span><span id="TestPensiune-36"><a href="#TestPensiune-36"><span class="linenos">36</span></a>            <span class="n">etaj</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="TestPensiune-37"><a href="#TestPensiune-37"><span class="linenos">37</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune-38"><a href="#TestPensiune-38"><span class="linenos">38</span></a>        
+</span><span id="TestPensiune-39"><a href="#TestPensiune-39"><span class="linenos">39</span></a>        <span class="c1"># 4. Cream un Client</span>
+</span><span id="TestPensiune-40"><a href="#TestPensiune-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune-41"><a href="#TestPensiune-41"><span class="linenos">41</span></a>            <span class="n">nume</span><span class="o">=</span><span class="s2">&quot;Popescu&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-42"><a href="#TestPensiune-42"><span class="linenos">42</span></a>            <span class="n">prenume</span><span class="o">=</span><span class="s2">&quot;Ion&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-43"><a href="#TestPensiune-43"><span class="linenos">43</span></a>            <span class="n">telefon</span><span class="o">=</span><span class="s2">&quot;0700000000&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune-44"><a href="#TestPensiune-44"><span class="linenos">44</span></a>            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;ion@test.com&quot;</span>
+</span><span id="TestPensiune-45"><a href="#TestPensiune-45"><span class="linenos">45</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune-46"><a href="#TestPensiune-46"><span class="linenos">46</span></a>
+</span><span id="TestPensiune-47"><a href="#TestPensiune-47"><span class="linenos">47</span></a>    <span class="c1"># --- TESTUL 1: Verificam daca paginile merg (Homepage) ---</span>
+</span><span id="TestPensiune-48"><a href="#TestPensiune-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_homepage_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune-49"><a href="#TestPensiune-49"><span class="linenos">49</span></a>        <span class="c1"># Ne logam virtual</span>
+</span><span id="TestPensiune-50"><a href="#TestPensiune-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">)</span>
+</span><span id="TestPensiune-51"><a href="#TestPensiune-51"><span class="linenos">51</span></a>        
+</span><span id="TestPensiune-52"><a href="#TestPensiune-52"><span class="linenos">52</span></a>        <span class="c1"># Incercam sa accesam pagina principala (&#39;acasa&#39; e numele din urls.py)</span>
+</span><span id="TestPensiune-53"><a href="#TestPensiune-53"><span class="linenos">53</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;acasa&#39;</span><span class="p">))</span>
+</span><span id="TestPensiune-54"><a href="#TestPensiune-54"><span class="linenos">54</span></a>        
+</span><span id="TestPensiune-55"><a href="#TestPensiune-55"><span class="linenos">55</span></a>        <span class="c1"># Codul 200 inseamna &quot;OK Success&quot;</span>
+</span><span id="TestPensiune-56"><a href="#TestPensiune-56"><span class="linenos">56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="TestPensiune-57"><a href="#TestPensiune-57"><span class="linenos">57</span></a>
+</span><span id="TestPensiune-58"><a href="#TestPensiune-58"><span class="linenos">58</span></a>    <span class="c1"># --- TESTUL 2: Securitate (Cineva nelogat nu are voie la Rapoarte) ---</span>
+</span><span id="TestPensiune-59"><a href="#TestPensiune-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_acces_rapoarte_nelogat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune-60"><a href="#TestPensiune-60"><span class="linenos">60</span></a>        <span class="c1"># Ne asiguram ca NU suntem logati</span>
+</span><span id="TestPensiune-61"><a href="#TestPensiune-61"><span class="linenos">61</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</span><span id="TestPensiune-62"><a href="#TestPensiune-62"><span class="linenos">62</span></a>        
+</span><span id="TestPensiune-63"><a href="#TestPensiune-63"><span class="linenos">63</span></a>        <span class="c1"># Incercam sa intram la rapoarte</span>
+</span><span id="TestPensiune-64"><a href="#TestPensiune-64"><span class="linenos">64</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;rapoarte_manager&#39;</span><span class="p">))</span>
+</span><span id="TestPensiune-65"><a href="#TestPensiune-65"><span class="linenos">65</span></a>        
+</span><span id="TestPensiune-66"><a href="#TestPensiune-66"><span class="linenos">66</span></a>        <span class="c1"># Ar trebui sa NU primim 200 (OK), ci 302 (Redirect catre Login)</span>
+</span><span id="TestPensiune-67"><a href="#TestPensiune-67"><span class="linenos">67</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="TestPensiune-68"><a href="#TestPensiune-68"><span class="linenos">68</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+</span><span id="TestPensiune-69"><a href="#TestPensiune-69"><span class="linenos">69</span></a>
+</span><span id="TestPensiune-70"><a href="#TestPensiune-70"><span class="linenos">70</span></a>    <span class="c1"># --- TESTUL 3: Logica de Business (Calcul matematic) ---</span>
+</span><span id="TestPensiune-71"><a href="#TestPensiune-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_creare_rezervare_si_calcul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune-72"><a href="#TestPensiune-72"><span class="linenos">72</span></a>        <span class="c1"># Simulam o rezervare de 3 nopti</span>
+</span><span id="TestPensiune-73"><a href="#TestPensiune-73"><span class="linenos">73</span></a>        <span class="n">data_in</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+</span><span id="TestPensiune-74"><a href="#TestPensiune-74"><span class="linenos">74</span></a>        <span class="n">data_out</span> <span class="o">=</span> <span class="n">data_in</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 3 nopti</span>
+</span><span id="TestPensiune-75"><a href="#TestPensiune-75"><span class="linenos">75</span></a>        
+</span><span id="TestPensiune-76"><a href="#TestPensiune-76"><span class="linenos">76</span></a>        <span class="n">rezervare</span> <span class="o">=</span> <span class="n">Rezervare</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune-77"><a href="#TestPensiune-77"><span class="linenos">77</span></a>            <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span><span class="p">,</span>
+</span><span id="TestPensiune-78"><a href="#TestPensiune-78"><span class="linenos">78</span></a>            <span class="n">data_check_in</span><span class="o">=</span><span class="n">data_in</span><span class="p">,</span>
+</span><span id="TestPensiune-79"><a href="#TestPensiune-79"><span class="linenos">79</span></a>            <span class="n">data_check_out</span><span class="o">=</span><span class="n">data_out</span><span class="p">,</span>
+</span><span id="TestPensiune-80"><a href="#TestPensiune-80"><span class="linenos">80</span></a>            <span class="n">status</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span>
+</span><span id="TestPensiune-81"><a href="#TestPensiune-81"><span class="linenos">81</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune-82"><a href="#TestPensiune-82"><span class="linenos">82</span></a>        <span class="n">rezervare</span><span class="o">.</span><span class="n">camere</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="p">)</span>
+</span><span id="TestPensiune-83"><a href="#TestPensiune-83"><span class="linenos">83</span></a>        
+</span><span id="TestPensiune-84"><a href="#TestPensiune-84"><span class="linenos">84</span></a>        <span class="c1"># Verificam matematica:</span>
+</span><span id="TestPensiune-85"><a href="#TestPensiune-85"><span class="linenos">85</span></a>        <span class="c1"># 3 nopti * 100 RON (pretul camerei create in setUp) = 300 RON</span>
+</span><span id="TestPensiune-86"><a href="#TestPensiune-86"><span class="linenos">86</span></a>        
+</span><span id="TestPensiune-87"><a href="#TestPensiune-87"><span class="linenos">87</span></a>        <span class="c1"># Calculam durata</span>
+</span><span id="TestPensiune-88"><a href="#TestPensiune-88"><span class="linenos">88</span></a>        <span class="n">durata</span> <span class="o">=</span> <span class="p">(</span><span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_out</span> <span class="o">-</span> <span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_in</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+</span><span id="TestPensiune-89"><a href="#TestPensiune-89"><span class="linenos">89</span></a>        <span class="n">pret_total</span> <span class="o">=</span> <span class="n">durata</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="o">.</span><span class="n">tip_camera</span><span class="o">.</span><span class="n">pret_per_noapte</span>
+</span><span id="TestPensiune-90"><a href="#TestPensiune-90"><span class="linenos">90</span></a>        
+</span><span id="TestPensiune-91"><a href="#TestPensiune-91"><span class="linenos">91</span></a>        <span class="c1"># AssertEqual verifica daca (300 == 300)</span>
+</span><span id="TestPensiune-92"><a href="#TestPensiune-92"><span class="linenos">92</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">durata</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="TestPensiune-93"><a href="#TestPensiune-93"><span class="linenos">93</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pret_total</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Similar to TransactionTestCase, but use <code>transaction.atomic()</code> to achieve
+test isolation.</p>
+
+<p>In most situations, TestCase should be preferred to TransactionTestCase as
+it allows faster execution. However, there are some situations where using
+TransactionTestCase might be necessary (e.g. testing some transactional
+behavior).</p>
+
+<p>On database backends with no transaction support, TestCase behaves as
+TransactionTestCase.</p>
+</div>
+
+
+                            <div id="TestPensiune.setUp" class="classattr">
+                                        <input id="TestPensiune.setUp-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">setUp</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="TestPensiune.setUp-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#TestPensiune.setUp"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TestPensiune.setUp-15"><a href="#TestPensiune.setUp-15"><span class="linenos">15</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune.setUp-16"><a href="#TestPensiune.setUp-16"><span class="linenos">16</span></a>        <span class="c1"># 1. Cream un user Manager ca sa ne putem loga</span>
+</span><span id="TestPensiune.setUp-17"><a href="#TestPensiune.setUp-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+</span><span id="TestPensiune.setUp-18"><a href="#TestPensiune.setUp-18"><span class="linenos">18</span></a>            <span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> 
+</span><span id="TestPensiune.setUp-19"><a href="#TestPensiune.setUp-19"><span class="linenos">19</span></a>            <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">,</span> 
+</span><span id="TestPensiune.setUp-20"><a href="#TestPensiune.setUp-20"><span class="linenos">20</span></a>            <span class="n">rol</span><span class="o">=</span><span class="s1">&#39;manager&#39;</span>
+</span><span id="TestPensiune.setUp-21"><a href="#TestPensiune.setUp-21"><span class="linenos">21</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune.setUp-22"><a href="#TestPensiune.setUp-22"><span class="linenos">22</span></a>        
+</span><span id="TestPensiune.setUp-23"><a href="#TestPensiune.setUp-23"><span class="linenos">23</span></a>        <span class="c1"># 2. Cream un Tip de Camera (Ex: Standard - 100 RON)</span>
+</span><span id="TestPensiune.setUp-24"><a href="#TestPensiune.setUp-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span> <span class="o">=</span> <span class="n">TipCamera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune.setUp-25"><a href="#TestPensiune.setUp-25"><span class="linenos">25</span></a>            <span class="n">nume_tip</span><span class="o">=</span><span class="s2">&quot;Camera Standard&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-26"><a href="#TestPensiune.setUp-26"><span class="linenos">26</span></a>            <span class="n">pret_per_noapte</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-27"><a href="#TestPensiune.setUp-27"><span class="linenos">27</span></a>            <span class="n">descriere</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-28"><a href="#TestPensiune.setUp-28"><span class="linenos">28</span></a>            <span class="n">facilitati</span><span class="o">=</span><span class="s2">&quot;Wifi&quot;</span>
+</span><span id="TestPensiune.setUp-29"><a href="#TestPensiune.setUp-29"><span class="linenos">29</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune.setUp-30"><a href="#TestPensiune.setUp-30"><span class="linenos">30</span></a>        
+</span><span id="TestPensiune.setUp-31"><a href="#TestPensiune.setUp-31"><span class="linenos">31</span></a>        <span class="c1"># 3. Cream o Camera fizica</span>
+</span><span id="TestPensiune.setUp-32"><a href="#TestPensiune.setUp-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span> <span class="o">=</span> <span class="n">Camera</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune.setUp-33"><a href="#TestPensiune.setUp-33"><span class="linenos">33</span></a>            <span class="n">numar_camera</span><span class="o">=</span><span class="s2">&quot;101&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-34"><a href="#TestPensiune.setUp-34"><span class="linenos">34</span></a>            <span class="n">tip_camera</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_standard</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-35"><a href="#TestPensiune.setUp-35"><span class="linenos">35</span></a>            <span class="n">stare</span><span class="o">=</span><span class="s1">&#39;libera&#39;</span> <span class="p">,</span>
+</span><span id="TestPensiune.setUp-36"><a href="#TestPensiune.setUp-36"><span class="linenos">36</span></a>            <span class="n">etaj</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="TestPensiune.setUp-37"><a href="#TestPensiune.setUp-37"><span class="linenos">37</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune.setUp-38"><a href="#TestPensiune.setUp-38"><span class="linenos">38</span></a>        
+</span><span id="TestPensiune.setUp-39"><a href="#TestPensiune.setUp-39"><span class="linenos">39</span></a>        <span class="c1"># 4. Cream un Client</span>
+</span><span id="TestPensiune.setUp-40"><a href="#TestPensiune.setUp-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune.setUp-41"><a href="#TestPensiune.setUp-41"><span class="linenos">41</span></a>            <span class="n">nume</span><span class="o">=</span><span class="s2">&quot;Popescu&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-42"><a href="#TestPensiune.setUp-42"><span class="linenos">42</span></a>            <span class="n">prenume</span><span class="o">=</span><span class="s2">&quot;Ion&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-43"><a href="#TestPensiune.setUp-43"><span class="linenos">43</span></a>            <span class="n">telefon</span><span class="o">=</span><span class="s2">&quot;0700000000&quot;</span><span class="p">,</span>
+</span><span id="TestPensiune.setUp-44"><a href="#TestPensiune.setUp-44"><span class="linenos">44</span></a>            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;ion@test.com&quot;</span>
+</span><span id="TestPensiune.setUp-45"><a href="#TestPensiune.setUp-45"><span class="linenos">45</span></a>        <span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Hook method for setting up the test fixture before exercising it.</p>
+</div>
+
+
+                            </div>
+                            <div id="TestPensiune.test_homepage_status" class="classattr">
+                                        <input id="TestPensiune.test_homepage_status-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">test_homepage_status</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="TestPensiune.test_homepage_status-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#TestPensiune.test_homepage_status"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TestPensiune.test_homepage_status-48"><a href="#TestPensiune.test_homepage_status-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_homepage_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune.test_homepage_status-49"><a href="#TestPensiune.test_homepage_status-49"><span class="linenos">49</span></a>        <span class="c1"># Ne logam virtual</span>
+</span><span id="TestPensiune.test_homepage_status-50"><a href="#TestPensiune.test_homepage_status-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;manager_test&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;parola_test&#39;</span><span class="p">)</span>
+</span><span id="TestPensiune.test_homepage_status-51"><a href="#TestPensiune.test_homepage_status-51"><span class="linenos">51</span></a>        
+</span><span id="TestPensiune.test_homepage_status-52"><a href="#TestPensiune.test_homepage_status-52"><span class="linenos">52</span></a>        <span class="c1"># Incercam sa accesam pagina principala (&#39;acasa&#39; e numele din urls.py)</span>
+</span><span id="TestPensiune.test_homepage_status-53"><a href="#TestPensiune.test_homepage_status-53"><span class="linenos">53</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;acasa&#39;</span><span class="p">))</span>
+</span><span id="TestPensiune.test_homepage_status-54"><a href="#TestPensiune.test_homepage_status-54"><span class="linenos">54</span></a>        
+</span><span id="TestPensiune.test_homepage_status-55"><a href="#TestPensiune.test_homepage_status-55"><span class="linenos">55</span></a>        <span class="c1"># Codul 200 inseamna &quot;OK Success&quot;</span>
+</span><span id="TestPensiune.test_homepage_status-56"><a href="#TestPensiune.test_homepage_status-56"><span class="linenos">56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="TestPensiune.test_acces_rapoarte_nelogat" class="classattr">
+                                        <input id="TestPensiune.test_acces_rapoarte_nelogat-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">test_acces_rapoarte_nelogat</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="TestPensiune.test_acces_rapoarte_nelogat-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#TestPensiune.test_acces_rapoarte_nelogat"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TestPensiune.test_acces_rapoarte_nelogat-59"><a href="#TestPensiune.test_acces_rapoarte_nelogat-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_acces_rapoarte_nelogat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-60"><a href="#TestPensiune.test_acces_rapoarte_nelogat-60"><span class="linenos">60</span></a>        <span class="c1"># Ne asiguram ca NU suntem logati</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-61"><a href="#TestPensiune.test_acces_rapoarte_nelogat-61"><span class="linenos">61</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-62"><a href="#TestPensiune.test_acces_rapoarte_nelogat-62"><span class="linenos">62</span></a>        
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-63"><a href="#TestPensiune.test_acces_rapoarte_nelogat-63"><span class="linenos">63</span></a>        <span class="c1"># Incercam sa intram la rapoarte</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-64"><a href="#TestPensiune.test_acces_rapoarte_nelogat-64"><span class="linenos">64</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;rapoarte_manager&#39;</span><span class="p">))</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-65"><a href="#TestPensiune.test_acces_rapoarte_nelogat-65"><span class="linenos">65</span></a>        
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-66"><a href="#TestPensiune.test_acces_rapoarte_nelogat-66"><span class="linenos">66</span></a>        <span class="c1"># Ar trebui sa NU primim 200 (OK), ci 302 (Redirect catre Login)</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-67"><a href="#TestPensiune.test_acces_rapoarte_nelogat-67"><span class="linenos">67</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</span><span id="TestPensiune.test_acces_rapoarte_nelogat-68"><a href="#TestPensiune.test_acces_rapoarte_nelogat-68"><span class="linenos">68</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="TestPensiune.test_creare_rezervare_si_calcul" class="classattr">
+                                        <input id="TestPensiune.test_creare_rezervare_si_calcul-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">test_creare_rezervare_si_calcul</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="TestPensiune.test_creare_rezervare_si_calcul-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#TestPensiune.test_creare_rezervare_si_calcul"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="TestPensiune.test_creare_rezervare_si_calcul-71"><a href="#TestPensiune.test_creare_rezervare_si_calcul-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_creare_rezervare_si_calcul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-72"><a href="#TestPensiune.test_creare_rezervare_si_calcul-72"><span class="linenos">72</span></a>        <span class="c1"># Simulam o rezervare de 3 nopti</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-73"><a href="#TestPensiune.test_creare_rezervare_si_calcul-73"><span class="linenos">73</span></a>        <span class="n">data_in</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-74"><a href="#TestPensiune.test_creare_rezervare_si_calcul-74"><span class="linenos">74</span></a>        <span class="n">data_out</span> <span class="o">=</span> <span class="n">data_in</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 3 nopti</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-75"><a href="#TestPensiune.test_creare_rezervare_si_calcul-75"><span class="linenos">75</span></a>        
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-76"><a href="#TestPensiune.test_creare_rezervare_si_calcul-76"><span class="linenos">76</span></a>        <span class="n">rezervare</span> <span class="o">=</span> <span class="n">Rezervare</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-77"><a href="#TestPensiune.test_creare_rezervare_si_calcul-77"><span class="linenos">77</span></a>            <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client_ion</span><span class="p">,</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-78"><a href="#TestPensiune.test_creare_rezervare_si_calcul-78"><span class="linenos">78</span></a>            <span class="n">data_check_in</span><span class="o">=</span><span class="n">data_in</span><span class="p">,</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-79"><a href="#TestPensiune.test_creare_rezervare_si_calcul-79"><span class="linenos">79</span></a>            <span class="n">data_check_out</span><span class="o">=</span><span class="n">data_out</span><span class="p">,</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-80"><a href="#TestPensiune.test_creare_rezervare_si_calcul-80"><span class="linenos">80</span></a>            <span class="n">status</span><span class="o">=</span><span class="s1">&#39;activa&#39;</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-81"><a href="#TestPensiune.test_creare_rezervare_si_calcul-81"><span class="linenos">81</span></a>        <span class="p">)</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-82"><a href="#TestPensiune.test_creare_rezervare_si_calcul-82"><span class="linenos">82</span></a>        <span class="n">rezervare</span><span class="o">.</span><span class="n">camere</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="p">)</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-83"><a href="#TestPensiune.test_creare_rezervare_si_calcul-83"><span class="linenos">83</span></a>        
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-84"><a href="#TestPensiune.test_creare_rezervare_si_calcul-84"><span class="linenos">84</span></a>        <span class="c1"># Verificam matematica:</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-85"><a href="#TestPensiune.test_creare_rezervare_si_calcul-85"><span class="linenos">85</span></a>        <span class="c1"># 3 nopti * 100 RON (pretul camerei create in setUp) = 300 RON</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-86"><a href="#TestPensiune.test_creare_rezervare_si_calcul-86"><span class="linenos">86</span></a>        
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-87"><a href="#TestPensiune.test_creare_rezervare_si_calcul-87"><span class="linenos">87</span></a>        <span class="c1"># Calculam durata</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-88"><a href="#TestPensiune.test_creare_rezervare_si_calcul-88"><span class="linenos">88</span></a>        <span class="n">durata</span> <span class="o">=</span> <span class="p">(</span><span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_out</span> <span class="o">-</span> <span class="n">rezervare</span><span class="o">.</span><span class="n">data_check_in</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-89"><a href="#TestPensiune.test_creare_rezervare_si_calcul-89"><span class="linenos">89</span></a>        <span class="n">pret_total</span> <span class="o">=</span> <span class="n">durata</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_101</span><span class="o">.</span><span class="n">tip_camera</span><span class="o">.</span><span class="n">pret_per_noapte</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-90"><a href="#TestPensiune.test_creare_rezervare_si_calcul-90"><span class="linenos">90</span></a>        
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-91"><a href="#TestPensiune.test_creare_rezervare_si_calcul-91"><span class="linenos">91</span></a>        <span class="c1"># AssertEqual verifica daca (300 == 300)</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-92"><a href="#TestPensiune.test_creare_rezervare_si_calcul-92"><span class="linenos">92</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">durata</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="TestPensiune.test_creare_rezervare_si_calcul-93"><a href="#TestPensiune.test_creare_rezervare_si_calcul-93"><span class="linenos">93</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pret_total</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                </section>
     </main>
 <script>
     function escapeHTML(html) {
